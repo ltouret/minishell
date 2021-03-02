@@ -6,7 +6,7 @@
 #    By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/20 13:00:20 by ltouret           #+#    #+#              #
-#    Updated: 2021/02/24 16:55:19 by ltouret          ###   ########.fr        #
+#    Updated: 2021/03/02 10:57:00 by ltouret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ INCLUDES	= -I libft
 		${CC} ${INCLUDES} ${CFLAGS} -c $< -o ${<:.c=.o}
 
 $(NAME): ${OBJS}
-		make -C libft/ 
+		make -C libft 
 		${CC} ${OBJS} ${LIBFT_FLAGS} -o ${NAME} 
 
 all:	${NAME}
@@ -44,9 +44,12 @@ clean:
 		${RM} ${OBJS}
 
 fclean:	clean
- 		rm -f libft/libft.a
+		rm -f libft/libft.a
 		${RM} ${NAME}
 
 re:		fclean all
+
+test:	all
+		@./minishell
 
 .PHONY: all clean fclean re
