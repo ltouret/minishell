@@ -6,7 +6,7 @@
 #    By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/20 13:00:20 by ltouret           #+#    #+#              #
-#    Updated: 2020/10/27 23:25:42 by ltouret          ###   ########.fr        #
+#    Updated: 2021/03/29 17:43:51 by ltouret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,10 @@ printf/apply_pre.c printf/apply_wid.c printf/apply_wid_int.c\
 printf/free_block.c\
 \
 ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstdelone.c\
-ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c
+ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c\
+\
+ft_string_destroy.c ft_string_new.c ft_string_push.c ft_string_remove.c\
+ft_string_sub.c ft_string_with_capacity.c
 
 OBJS = ${SRCS:.c=.o}
 

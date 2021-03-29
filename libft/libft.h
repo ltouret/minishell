@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/20 08:03:48 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/27 23:24:08 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/03/29 19:22:15 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,14 @@ typedef struct		s_list
 	void			*content;
 	struct s_list	*next;
 }					t_list;
+
+typedef struct		s_string
+{
+	char	*str;
+	size_t	len;
+	size_t	capacity;
+}					t_string;
+
 int					ft_printf(const char *str, ...);
 int					get_next_line(int fd, char **line);
 int					ft_atoi(const char *str);
@@ -47,6 +55,13 @@ void				ft_lstiter(t_list *lst, void (*f)(void *));
 int					ft_lstsize(t_list *lst);
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
+t_string			*ft_string_new(void);
+t_string			*ft_string_from(char *str);
+t_string			*ft_string_with_capacity(size_t capacity);
+t_string			*ft_string_push(t_string *string, char *to_append);
+t_string			*ft_string_push_char(t_string *string, char to_append);
+t_string			*ft_string_sub(t_string *string, size_t start, size_t len);
+t_string			*ft_string_remove(t_string *string, int start, int end);
 void				*ft_memccpy(void *dst, void *src, int c, size_t n);
 void				*ft_memchr(const void *s, int c, size_t n);
 int					ft_memcmp(const void *s1, const void *s2, size_t n);
@@ -57,7 +72,8 @@ void				ft_putchar_fd(char c, int fd);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
 void				ft_putstr_fd(char *s, int fd);
-char				**ft_split(char const *s, char c);
+char				**ft_split(char const *s, const char *delimiters);
+char				**ft_clear_splitted(char **tab);
 char				*ft_strchr(const char *s, int c);
 char				*ft_strdup(const char *s1);
 char				*ft_strjoin(char const *s1, char const *s2);
