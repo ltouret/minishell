@@ -6,7 +6,7 @@
 /*   By: leet <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 19:31:08 by leet              #+#    #+#             */
-/*   Updated: 2020/05/20 18:18:09 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/03/31 19:57:00 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int		parsing_str(char *str, t_list **lst)
 		{
 			if (!(block = malloc(sizeof(t_block))))
 				return (-1);
-			if (!(current = ft_lstnew((void *)block)))
+			if (!(current = ft_lstnew("", (void *)block)))
 				return (-1);
 			init_cont(current);
 			tmp = str_index_dup(str, ft_find(str, '%'),

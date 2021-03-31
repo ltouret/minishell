@@ -6,6 +6,7 @@
 #include <signal.h>
 #include "minishell.h"
 #include "libft.h"
+ # include <sys/types.h>
 
 int	is_line_empty(t_string *line)
 {
@@ -112,6 +113,7 @@ int		main(int argc, char **argv)
 	while (1)
 	{
 		wait_input(data); 
+		parse_line(data);
 		printf("%s", data->line->str);
 		exit(1);
 	}

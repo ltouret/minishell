@@ -69,8 +69,12 @@ typedef struct		s_env
 	struct s_env	*next;
 }					t_env;
 
-t_data	*get_data(void);
-int		*should_prompt_be_printed(void);
-void	panic(t_error err_code);
+t_data		*get_data(void);
+int			*should_prompt_be_printed(void);
+void		panic(t_error err_code);
+t_error		parse_line(t_data *data);
+t_string	*get_next_cmd(t_string *line, unsigned int *i);
+t_string	*check_err(t_string *next_cmd, int inside_quote, int inside_dquote);
+int			other_cmd_after(t_string *line, int i);
 
 #endif

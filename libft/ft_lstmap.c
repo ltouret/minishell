@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/23 14:17:28 by ltouret           #+#    #+#             */
-/*   Updated: 2019/10/23 17:44:34 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/03/31 19:57:59 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 	start = NULL;
 	while (lst)
 	{
-		if (!(new_elem = ft_lstnew((*f)(lst->content))))
+		if (!(new_elem = ft_lstnew("", (*f)(lst->content))))
 		{
 			ft_lstclear(&start, del);
 			return (NULL);
