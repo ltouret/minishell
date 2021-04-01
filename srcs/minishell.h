@@ -76,5 +76,10 @@ t_error		parse_line(t_data *data);
 t_string	*get_next_cmd(t_string *line, unsigned int *i);
 t_string	*check_err(t_string *next_cmd, int inside_quote, int inside_dquote);
 int			other_cmd_after(t_string *line, int i);
+void	fill_pipe_fds(t_list *pipe_cmds);
+void	skip_until_pipe(t_string *cmd, unsigned int *i);
+t_pipe_cmd	*get_next_pipe_cmd(t_string *cmd, unsigned int *i);
+t_list	*get_pipes_cmds(t_string *cmd);
+void	parse_cmds(t_data *data);
 
 #endif

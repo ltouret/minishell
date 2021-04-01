@@ -114,6 +114,7 @@ int		main(int argc, char **argv)
 	{
 		wait_input(data); 
 		parse_line(data);
+		parse_cmds(data);
 		printf("%s", data->line->str);
 		exit(1);
 	}
