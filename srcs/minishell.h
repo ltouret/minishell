@@ -81,5 +81,14 @@ void	skip_until_pipe(t_string *cmd, unsigned int *i);
 t_pipe_cmd	*get_next_pipe_cmd(t_string *cmd, unsigned int *i);
 t_list	*get_pipes_cmds(t_string *cmd);
 void	parse_cmds(t_data *data);
+void	go_to_redir_end(t_string *pipe_cmd, unsigned int *i);
+t_string	*extract_redir(t_string *pipe_cmd, unsigned int i);
+int	in_quote(t_pipe_cmd *pipe_cmd, int i, int inside_quote);
+t_string	*get_next_redir(t_pipe_cmd *pipe_cmd);
+void	skip_start(t_string *redir, int *i);
+t_string	*extract_filename(t_string *redir);
+void	handle_in(t_pipe_cmd *pipe_cmd, t_string *redir, t_string *filename);
+void	handle_redir(t_pipe_cmd *pipe_cmd, t_string *redir);
+t_error	parse_redirs(t_data *data);
 
 #endif

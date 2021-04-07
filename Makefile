@@ -6,7 +6,7 @@
 #    By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/20 13:00:20 by ltouret           #+#    #+#              #
-#    Updated: 2021/04/01 19:50:19 by ltouret          ###   ########.fr        #
+#    Updated: 2021/04/07 20:36:46 by ltouret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@
 NAME = minishell
 
 SRCS = srcs/main.c srcs/main_utils1.c srcs/errors.c srcs/parse_line.c\
-		srcs/parse_cmds.c
+		srcs/parse_cmds.c srcs/parse_redirs.c srcs/parse_redirs_utils.c
 
 OBJS = ${SRCS:.c=.o}
 
