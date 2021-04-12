@@ -115,6 +115,7 @@ int		main(int argc, char **argv)
 		wait_input(data); 
 		parse_line(data);
 		parse_cmds(data);
+		post_process(data); 
 		if (parse_redirs(data) == ERR)
 		{
 			//free_data(data);

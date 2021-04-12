@@ -69,6 +69,15 @@ typedef struct		s_env
 	struct s_env	*next;
 }					t_env;
 
+typedef struct		s_pp_state
+{
+	t_pipe_cmd		*cmd;
+	char			*cursor;
+	char			*anchor;
+	bool			in_quote;
+	bool			in_dquote;
+}					t_pp_state;
+
 t_data		*get_data(void);
 int			*should_prompt_be_printed(void);
 void		panic(t_error err_code);
@@ -90,5 +99,12 @@ t_string	*extract_filename(t_string *redir);
 void	handle_in(t_pipe_cmd *pipe_cmd, t_string *redir, t_string *filename);
 void	handle_redir(t_pipe_cmd *pipe_cmd, t_string *redir);
 t_error	parse_redirs(t_data *data);
+void	post_process(t_data *data);
+void	pp_realloc(t_pp_state *st, t_string *str, size_t capacity);
+void	pp_replace(t_pp_state *st, ssize_t oldlen, char *newword, t_string *str);
+void	pp_strip(t_pp_state *st, ssize_t striplen, t_string *str);
+void	process_env(t_string *cmd, t_pp_state *st, char *cursor);
+void	process_escape(t_string *cmd, t_pp_state *st, char *cursor);
+bool	process_space(t_string *cmd, t_pp_state *st, char *cursor);
 
 #endif
