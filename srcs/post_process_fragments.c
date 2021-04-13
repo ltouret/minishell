@@ -2,7 +2,6 @@
 
 #include "minishell.h"
 
-/*
 void	process_env(t_string *cmd, t_pp_state *st, char *cursor)
 {
 	size_t	len;
@@ -27,7 +26,6 @@ void	process_env(t_string *cmd, t_pp_state *st, char *cursor)
 		pp_replace(st, 1 + len, env_value, cmd);
 	}
 }
-*/
 
 void	process_escape(t_string *cmd, t_pp_state *st, char *cursor)
 {

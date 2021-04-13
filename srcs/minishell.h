@@ -32,6 +32,13 @@ typedef enum		e_error
 	ERR_DOUBLE_INIT_ENV_DICO
 }					t_error;
 
+typedef enum e_env_equality
+{
+	ENV_EQ_MISFORMAT = -1,
+	ENV_EQ_NONE = 0,
+	ENV_EQ_UNIFIED = 1
+}					t_env_equality;
+
 # define MSG_PROMPT "This is a prompt please enter your cmd $ "
 
 typedef struct		s_data
@@ -106,5 +113,25 @@ void	pp_strip(t_pp_state *st, ssize_t striplen, t_string *str);
 void	process_env(t_string *cmd, t_pp_state *st, char *cursor);
 void	process_escape(t_string *cmd, t_pp_state *st, char *cursor);
 bool	process_space(t_string *cmd, t_pp_state *st, char *cursor);
+t_env	**env_dictionary(void);
+void	env_init_fill(char **environ, t_env **prev_next);
+void	env_init(char **environ);
+void	env_shutdown(void);
+t_env	*env_get(const char *key);
+char	*env_get_value(const char *key);
+char	**env_get_array(void);
+void	env_clear_array(char **envs);
+t_env	*env_create(char *equality);
+t_env	*env_set(const char *key, const char *value);
+void	env_unset(const char *key);
+t_env_equality	env_isvalid_equality(const char *str, bool sanitizename);
+char	*env_parse_key(const char *eqlt);
+char	*env_parse_value(const char *eqlt);
+char	*env_toequality(t_env *env);
+size_t	env_listlen(t_env *list);
+bool	env_verify_name(const char *str);
+bool	env_isinternal(const char *key);
+bool	env_isinternal_char(const char c);
+size_t	env_get_name_len(const char *str);
 
 #endif

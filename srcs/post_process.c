@@ -25,7 +25,7 @@ static bool	process_char(t_string *cmd, t_pp_state *st, char *cursor)
 		process_escape(cmd, st, cursor);
 	else if (*cursor == '$')
 		{
-			//process_env(cmd, st, cursor);
+			process_env(cmd, st, cursor);
 			//printf("env cursor %s\n", cmd->str);
 		}
 	else if (*cursor == '"' && ++strip)

@@ -99,7 +99,7 @@ void	sighandler(int signum)
 	}
 }
 
-int		main(int argc, char **argv)
+int		main(int argc, char **argv, char **env)
 {
 	ft_printf("%s\n", "Hey, welcome to my minishell!");
 	t_data	*data;
@@ -107,7 +107,7 @@ int		main(int argc, char **argv)
 	(void) argv;
 	data = get_data();
 	ft_bzero(data, sizeof(t_data));
-	//env here
+	env_init(env);
 	signal(SIGINT, sighandler);
 	signal(SIGQUIT, sighandler);
 	while (1)
@@ -115,12 +115,12 @@ int		main(int argc, char **argv)
 		wait_input(data); 
 		parse_line(data);
 		parse_cmds(data);
-		post_process(data); 
 		if (parse_redirs(data) == ERR)
 		{
 			//free_data(data);
 			continue ;
 		}
+		post_process(data); 
 		printf("%s", data->line->str);
 		exit(1);
 	}
