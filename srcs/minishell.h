@@ -39,6 +39,19 @@ typedef enum e_env_equality
 	ENV_EQ_UNIFIED = 1
 }					t_env_equality;
 
+typedef enum e_builtin
+{
+	BI_NONE = -1,
+	BI_ECHO,
+	BI_CD,
+	BI_PWD,
+	BI_EXPORT,
+	BI_UNSET,
+	BI_ENV,
+	BI_EXIT,
+	BUILTINS_COUNT
+}					t_builtin;
+
 # define MSG_PROMPT "This is a prompt please enter your cmd $ "
 
 typedef struct		s_data
@@ -88,6 +101,7 @@ typedef struct		s_pp_state
 t_data		*get_data(void);
 int			*should_prompt_be_printed(void);
 void		panic(t_error err_code);
+void	handle_error_code(t_data *data, int status);
 t_error		parse_line(t_data *data);
 t_string	*get_next_cmd(t_string *line, unsigned int *i);
 t_string	*check_err(t_string *next_cmd, int inside_quote, int inside_dquote);
@@ -133,5 +147,14 @@ bool	env_verify_name(const char *str);
 bool	env_isinternal(const char *key);
 bool	env_isinternal_char(const char c);
 size_t	env_get_name_len(const char *str);
+void	close_fds(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd);
+void	wait_for_all_process_to_finish(t_data *data, t_cmd *cmd);
+void	exec_cmd(t_data *data, t_cmd *cmd);
+void	exec_line(t_data *data);
+int	exec_builtin(t_builtin bi, size_t argc, char **argv);
+t_error	builtins(t_builtin builtin, size_t argc, char **argv);
+t_builtin	get_builtin(char *command);
+void	exec_fork(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd, t_builtin bi);
+void	ex_pipe_cmd(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd);
 
 #endif
