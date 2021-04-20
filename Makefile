@@ -6,7 +6,7 @@
 #    By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/20 13:00:20 by ltouret           #+#    #+#              #
-#    Updated: 2021/04/14 20:51:29 by ltouret          ###   ########.fr        #
+#    Updated: 2021/04/20 13:14:26 by ltouret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ SRCS = srcs/main.c srcs/main_utils1.c srcs/main_utils2.c srcs/errors.c\
 		srcs/post_process_utils.c srcs/post_process_fragments.c\
 		srcs/environ.c srcs/getters.c srcs/setters.c srcs/utils.c\
 		srcs/utils2.c srcs/exec_line.c srcs/exec_pipe_cmd.c\
-		srcs/builtins.c
+		srcs/builtins.c srcs/cd.c srcs/echo.c srcs/env.c srcs/exit.c\
+		srcs/export.c srcs/pwd.c srcs/unset.c srcs/whereis.c
 
 OBJS = ${SRCS:.c=.o}
 

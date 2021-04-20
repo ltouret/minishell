@@ -32,6 +32,17 @@ typedef enum		e_error
 	ERR_DOUBLE_INIT_ENV_DICO
 }					t_error;
 
+typedef struct s_cd_opts
+{
+	char	*home;
+	char	*path;
+	bool	relative;
+	bool	back;
+	char	*pwd;
+	char	*finalpath;
+	bool	print;
+}			t_cd_opts;
+
 typedef enum e_env_equality
 {
 	ENV_EQ_MISFORMAT = -1,
@@ -101,6 +112,7 @@ typedef struct		s_pp_state
 t_data		*get_data(void);
 int			*should_prompt_be_printed(void);
 void		panic(t_error err_code);
+void	print_warning(t_error err_code);
 void	handle_error_code(t_data *data, int status);
 t_error		parse_line(t_data *data);
 t_string	*get_next_cmd(t_string *line, unsigned int *i);
@@ -156,5 +168,13 @@ t_error	builtins(t_builtin builtin, size_t argc, char **argv);
 t_builtin	get_builtin(char *command);
 void	exec_fork(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd, t_builtin bi);
 void	ex_pipe_cmd(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd);
+char	*whereis(const char *filepath);
+t_error	builtin_cd(size_t argc, char **argv);
+t_error	builtin_echo(size_t argc, char **argv);
+t_error	builtin_pwd(size_t argc, char **argv);
+t_error	builtin_export(size_t argc, char **argv);
+t_error	builtin_unset(size_t argc, char **argv);
+t_error	builtin_env(size_t argc, char **argv);
+t_error	builtin_exit(size_t argc, char **argv);
 
 #endif

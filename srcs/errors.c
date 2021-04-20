@@ -20,3 +20,28 @@ void	panic(t_error err_code)
 		printf("Unknown Error ... exiting\n");
 	exit(ERR);
 }
+
+void	print_warning(t_error err_code)
+{
+	if (err_code == ERR_QUOTE)
+		printf("Syntax error : The command is not complete\n");
+	else if (err_code == ERR_EMPTY_COMMAND)
+		printf("Syntax error : Empty command\n");
+	else if (err_code == ERR_SYNTAX)
+		printf("Syntax error\n");
+	else if (err_code == ERR_UNKNOWN_CMD)
+		printf("Error : Unknown command\n");
+	else if (err_code == ERR_OPEN)
+		printf("Error : Cannot open file\n");
+	else if (err_code == ERR_ERRNO)
+		printf("%s\n", strerror(errno));
+	else if (err_code == ERR_PRINTF)
+		printf("printf returned negative value\n");
+	else if (err_code == ERR_TOOMUCH_ARGS)
+		printf("Too much arguments provided\n");
+	else if (err_code == ERR_ROOTPARENT)
+		printf("Cannot get parent of the root directory\n");
+	else
+		printf("Unknown error\n");
+}
+

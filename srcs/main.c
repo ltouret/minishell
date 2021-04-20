@@ -121,6 +121,7 @@ int		main(int argc, char **argv, char **env)
 			continue ;
 		}
 		post_process(data); 
+		//exec_line(data); 
 		printf("%s", data->line->str);
 		exit(1);
 	}
