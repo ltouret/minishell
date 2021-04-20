@@ -36,11 +36,8 @@ typedef struct s_cd_opts
 {
 	char	*home;
 	char	*path;
-	bool	relative;
-	bool	back; //
 	char	*pwd;
 	char	*finalpath;
-	bool	print;
 }			t_cd_opts;
 
 typedef enum e_env_equality
@@ -114,6 +111,7 @@ int			*should_prompt_be_printed(void);
 void		panic(t_error err_code);
 void	print_warning(t_error err_code);
 void	handle_error_code(t_data *data, int status);
+void	handle_ctrl_d(t_data *data);
 t_error		parse_line(t_data *data);
 t_string	*get_next_cmd(t_string *line, unsigned int *i);
 t_string	*check_err(t_string *next_cmd, int inside_quote, int inside_dquote);

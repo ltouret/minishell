@@ -59,7 +59,8 @@ void	wait_input(t_data *data)
 	ret = read_line(data->line);
 	while (ret >= 0)
 	{
-		//if (read_ret == 0)
+		// FREE HERE!
+		//if (ret == 0)
 		//	handle_ctrl_d(data);
 		if (ret == -1)
 			panic(ERR_READ);
@@ -97,8 +98,8 @@ void	sighandler(int signum)
 
 int		main(int argc, char **argv, char **env)
 {
-	ft_printf("%s\n", "Hey, welcome to my minishell!");
 	t_data	*data;
+
 	(void) argc;
 	(void) argv;
 	data = get_data();

@@ -6,7 +6,7 @@
 #    By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/20 13:00:20 by ltouret           #+#    #+#              #
-#    Updated: 2021/04/20 13:49:08 by ltouret          ###   ########.fr        #
+#    Updated: 2021/04/20 17:40:19 by ltouret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,11 +19,11 @@ SRCS = srcs/main.c srcs/main_utils1.c srcs/main_utils2.c srcs/errors.c\
 		srcs/parse_line.c srcs/parse_cmds.c srcs/parse_redirs.c\
 		srcs/parse_redirs_utils.c srcs/post_process.c\
 		srcs/post_process_utils.c srcs/post_process_fragments.c\
-		srcs/environ.c srcs/getters.c srcs/setters.c srcs/utils.c\
-		srcs/utils2.c srcs/exec_line.c srcs/exec_pipe_cmd.c\
+		srcs/environ.c srcs/getters.c srcs/setters.c srcs/env_utils.c\
+		srcs/env_utils2.c srcs/exec_line.c srcs/exec_pipe_cmd.c\
 		srcs/builtins.c srcs/cd.c srcs/echo.c srcs/env.c srcs/exit.c\
 		srcs/export.c srcs/pwd.c srcs/unset.c srcs/whereis.c\
-		srcs/path_utils.c srcs/chdir.c srcs/exists.c srcs/join.c
+		srcs/path_utils.c srcs/exists.c srcs/join.c
 
 OBJS = ${SRCS:.c=.o}
 

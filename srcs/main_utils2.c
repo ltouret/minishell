@@ -4,15 +4,15 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-/*
 void	handle_ctrl_d(t_data *data)
 {
-	free_data(data);
+	// FREE HERE
+	(void) data;
+	//free_data(data);
 	env_shutdown();
 	write(1, "exit\n", 5);
 	exit(0);
 }
-*/
 
 void	handle_error_code(t_data *data, int status)
 {

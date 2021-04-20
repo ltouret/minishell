@@ -2,6 +2,21 @@
 
 #include "minishell.h"
 
+t_error	path_chdir(const char *newpath, const char *oldpath)
+{
+	t_error	err;
+
+	err = chdir(newpath);
+	if (err == OK)
+	{
+		env_set("OLDPWD", oldpath);
+		env_set("PWD", newpath);
+	}
+	else
+		err = ERR_ERRNO;
+	return (err);
+}
+
 static t_error	exec_cd(t_cd_opts *options)
 {
 	t_error	err;
@@ -11,12 +26,10 @@ static t_error	exec_cd(t_cd_opts *options)
 	//printf("path %s\n", options->path);
 	options->finalpath = ft_strdup(options->path);
 	//printf("joined %s\n", path_join(options->pwd, options->path));
-	if (err == OK && !options->finalpath)
+	if (!options->finalpath)
 		return (ERR_MALLOC);
-	if (err == OK)
-		err = path_chdir(options->finalpath, options->pwd);
-	if (err == OK)
-		free(options->finalpath);
+	err = path_chdir(options->finalpath, options->pwd);
+	free(options->finalpath);
 	return (err);
 }
 
@@ -37,14 +50,12 @@ t_error	builtin_cd(size_t argc, char **argv)
 		options.path = options.home;
 	if (!options.path)
 		return (OK);
-	options.relative = (*options.path != '/');
-	//options.back = ft_strcmp(options.path, "-") == 0;
-	//printf("rela %d back %d\n", options.relative, options.back);
 	err = path_pwd(&(options.pwd));
 	//printf("path %s pwd %s\n", options.path, options.pwd);
 	//printf("back %s\n", options.finalpath);
 	if (err == OK && options.path)
 		err = exec_cd(&options);
 	free(options.pwd);
+	//free(options.path);
 	return (err);
 }
