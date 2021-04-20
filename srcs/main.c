@@ -85,17 +85,13 @@ void	sighandler(int signum)
 			ft_putstr_fd(MSG_PROMPT, 1);
 		}
 		get_data()->sigint_received = 1;
-		/*
 		env_set("?", "130");
-		*/
 	}
 	else if (signum == SIGQUIT)
 	{
 		printf("Quit\n");
 		get_data()->sigquit_received = 1;
-		/*
 		env_set("?", "131");
-		*/
 	}
 }
 
@@ -121,8 +117,8 @@ int		main(int argc, char **argv, char **env)
 			continue ;
 		}
 		post_process(data); 
-		//exec_line(data); 
-		printf("%s", data->line->str);
-		exit(1);
+		exec_line(data); 
+		//printf("%s", data->line->str);
+		//exit(1);
 	}
 }

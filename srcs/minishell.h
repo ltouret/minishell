@@ -37,7 +37,7 @@ typedef struct s_cd_opts
 	char	*home;
 	char	*path;
 	bool	relative;
-	bool	back;
+	bool	back; //
 	char	*pwd;
 	char	*finalpath;
 	bool	print;
@@ -176,5 +176,10 @@ t_error	builtin_export(size_t argc, char **argv);
 t_error	builtin_unset(size_t argc, char **argv);
 t_error	builtin_env(size_t argc, char **argv);
 t_error	builtin_exit(size_t argc, char **argv);
+t_error		path_pwd(char **str);
+t_error	path_chdir(const char *newpath, const char *oldpath);
+bool	dir_exists(const char *path, bool follow);
+bool	file_exists(const char *path);
+char	*path_join(const char *begin, const char *end);
 
 #endif

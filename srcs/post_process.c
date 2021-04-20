@@ -38,7 +38,7 @@ static bool	process_char(t_string *cmd, t_pp_state *st, char *cursor)
 
 static void	push_arg(t_pipe_cmd *cmd, char **old_argv, t_pp_state *st)
 {
-	printf("X: ");
+	//printf("X: ");
 	cmd->argv = malloc((cmd->argc + 2) * sizeof(char*));
 	if (!cmd->argv)
 		panic(ERR_MALLOC);
@@ -55,7 +55,7 @@ static void	push_arg(t_pipe_cmd *cmd, char **old_argv, t_pp_state *st)
 				st->anchor, 0, st->cursor - st->anchor);
 		free(old_argv);
 	}
-	printf("curs %s anch %s cmd %s argc %ld\n", st->cursor, st->anchor, cmd->cmd, cmd->argc);
+	//printf("curs %s anch %s cmd %s argc %ld\n", st->cursor, st->anchor, cmd->cmd, cmd->argc);
 	if (!*(cmd->argv + cmd->argc))
 		panic(ERR_MALLOC);
 	*(cmd->argv + ++cmd->argc) = NULL;
