@@ -18,7 +18,6 @@ int	*should_prompt_be_printed(void)
 	return (&i);
 }
 
-/*
 void	free_pipe_cmds(t_list *pipe_cmd_elem)
 {
 	t_pipe_cmd	*pipe_cmd;
@@ -66,4 +65,3 @@ void	free_data(t_data *data)
 		free_cmds(data->cmds);
 	ft_bzero(data, sizeof(t_data));
 }
-*/

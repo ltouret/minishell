@@ -6,9 +6,7 @@
 
 void	handle_ctrl_d(t_data *data)
 {
-	// FREE HERE
-	(void) data;
-	//free_data(data);
+	free_data(data);
 	env_shutdown();
 	write(1, "exit\n", 5);
 	exit(0);

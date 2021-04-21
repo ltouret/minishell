@@ -6,7 +6,7 @@
 #include <signal.h>
 #include "minishell.h"
 #include "libft.h"
- # include <sys/types.h>
+#include <sys/types.h>
 
 int	is_line_empty(t_string *line)
 {
@@ -59,9 +59,9 @@ void	wait_input(t_data *data)
 	ret = read_line(data->line);
 	while (ret >= 0)
 	{
-		// FREE HERE!
-		//if (ret == 0)
-		//	handle_ctrl_d(data);
+		//printf("ret %d\n", ret);
+		if (ret == 0)
+			handle_ctrl_d(data);
 		if (ret == -1)
 			panic(ERR_READ);
 		if (!is_line_empty(data->line))
@@ -90,9 +90,19 @@ void	sighandler(int signum)
 	}
 	else if (signum == SIGQUIT)
 	{
-		printf("Quit\n");
-		get_data()->sigquit_received = 1;
-		env_set("?", "131");
+		if (*should_prompt_be_printed() == 1)
+		{
+			printf("\n");
+			ft_putstr_fd(MSG_PROMPT, 1);
+			ft_bzero(get_data()->line->str, get_data()->line->capacity);
+			get_data()->line->len = 0;
+		}
+		else
+		{
+			printf("Quit\n");
+			get_data()->sigquit_received = 1;
+			env_set("?", "131");
+		}
 	}
 }
 
@@ -105,8 +115,8 @@ int		main(int argc, char **argv, char **env)
 	data = get_data();
 	ft_bzero(data, sizeof(t_data));
 	env_init(env);
-	signal(SIGINT, sighandler);
-	signal(SIGQUIT, sighandler);
+	signal(SIGINT, &sighandler);
+	signal(SIGQUIT, &sighandler);
 	while (1)
 	{
 		wait_input(data); 
@@ -114,12 +124,11 @@ int		main(int argc, char **argv, char **env)
 		parse_cmds(data);
 		if (parse_redirs(data) == ERR)
 		{
-			//free_data(data);
+			free_data(data);
 			continue ;
 		}
 		post_process(data); 
 		exec_line(data); 
-		//printf("%s", data->line->str);
-		//exit(1);
+		free_data(data);
 	}
 }

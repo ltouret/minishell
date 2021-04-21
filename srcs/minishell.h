@@ -9,6 +9,7 @@
 # include <limits.h>
 # include <string.h>
 # include <errno.h>
+# include <sys/types.h> 
 # include "libft.h"
 
 typedef enum		e_error
@@ -179,5 +180,8 @@ t_error	path_chdir(const char *newpath, const char *oldpath);
 bool	dir_exists(const char *path, bool follow);
 bool	file_exists(const char *path);
 char	*path_join(const char *begin, const char *end);
+void	free_data(t_data *data);
+void	free_cmds(t_list *cmds);
+void	free_pipe_cmds(t_list *pipe_cmd_elem);
 
 #endif
