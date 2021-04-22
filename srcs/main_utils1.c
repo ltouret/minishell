@@ -11,7 +11,7 @@ t_data	*get_data(void)
 	return (&data);
 }
 
-int	*should_prompt_be_printed(void)
+int	*print_prompt(void)
 {
 	static int	i = 0;
 

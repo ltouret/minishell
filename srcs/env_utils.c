@@ -26,7 +26,6 @@ char	*env_parse_key(const char *eqlt)
 	char	*delimiter;
 
 	delimiter = ft_strchr(eqlt, '=');
-	//printf("parse %s %s %ld\n", eqlt, delimiter, delimiter - eqlt);
 	return (ft_substr(eqlt, 0, delimiter - eqlt));
 }
 

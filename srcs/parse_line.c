@@ -3,7 +3,7 @@
 #include "libft.h"
 #include "minishell.h"
 
-int	other_cmd_after(t_string *line, int i)
+static int	cmd_after(t_string *line, int i)
 {
 	while (line->str[i] && ft_strchr("\f\t \n\r\v", line->str[i]))
 		i++;
@@ -12,43 +12,43 @@ int	other_cmd_after(t_string *line, int i)
 	return (1);
 }
 
-t_string	*check_err(t_string *next_cmd, int inside_quote, int inside_dquote)
+t_string	*check_err(t_string *next_cmd, int quote, int dquote)
 {
-	if (inside_dquote || inside_quote)
+	if (dquote || quote)
 	{
-		//print_warning(ERR_QUOTE);
+		print_warning(ERR_QUOTE);
 		ft_string_destroy(next_cmd);
 		return (NULL);
 	}
 	if (!next_cmd->str)
 	{
-		//print_warning(ERR_EMPTY_COMMAND);
+		print_warning(ERR_EMPTY_COMMAND);
 		ft_string_destroy(next_cmd);
 		return (NULL);
 	}
 	return (next_cmd);
 }
 
-t_string	*get_next_cmd(t_string *line, unsigned int *i)
+static t_string	*next_cmd(t_string *line, unsigned int *i)
 {
 	t_string	*next_cmd;
-	int			inside_quote;
-	int			inside_dquote;
+	int			quote;
+	int			dquote;
 
 	next_cmd = ft_string_new();
 	if (!next_cmd)
 		panic(ERR_MALLOC);
-	inside_dquote = 0;
-	inside_quote = 0;
+	dquote = 0;
+	quote = 0;
 	while (*i < line->len)
 	{
-		if (line->str[*i] == '"' && !inside_quote && *i > 0
+		if (line->str[*i] == '"' && !quote && *i > 0
 			&& line->str[(*i) - 1] != '\\')
-			inside_dquote = !inside_dquote;
-		else if (line->str[*i] == '\'' && !inside_dquote && *i > 0
+			dquote = !dquote;
+		else if (line->str[*i] == '\'' && !dquote && *i > 0
 			&& line->str[(*i) - 1] != '\\')
-			inside_quote = !inside_quote;
-		else if (line->str[*i] == ';' && !inside_quote && !inside_dquote)
+			quote = !quote;
+		else if (line->str[*i] == ';' && !quote && !dquote)
 		{
 			(*i)++;
 			break ;
@@ -56,7 +56,7 @@ t_string	*get_next_cmd(t_string *line, unsigned int *i)
 		ft_string_push_char(next_cmd, line->str[*i]);
 		(*i)++;
 	}
-	return (check_err(next_cmd, inside_quote, inside_dquote));
+	return (check_err(next_cmd, quote, dquote));
 }
 
 t_error	parse_line(t_data *data)
@@ -67,13 +67,13 @@ t_error	parse_line(t_data *data)
 
 	data->cmds = NULL;
 	i = 0;
-	while (i < data->line->len && other_cmd_after(data->line, i))
+	while (i < data->line->len && cmd_after(data->line, i))
 	{
 		cmd = malloc(sizeof(t_cmd));
 		if (!cmd)
 			panic(ERR_MALLOC);
 		ft_bzero(cmd, sizeof(t_cmd));
-		cmd->cmd = get_next_cmd(data->line, &i);
+		cmd->cmd = next_cmd(data->line, &i);
 		if (!cmd->cmd)
 		{
 			free(cmd);

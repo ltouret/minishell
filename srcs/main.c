@@ -8,7 +8,7 @@
 #include "libft.h"
 #include <sys/types.h>
 
-int	is_line_empty(t_string *line)
+int	line_empty(t_string *line)
 {
 	char	**splitted;
 	int		ret;
@@ -55,54 +55,21 @@ void	wait_input(t_data *data)
 	if (!data->line)
 		panic(ERR_MALLOC);
 	ft_putstr_fd(MSG_PROMPT, 1);
-	*should_prompt_be_printed() = 1;
+	*print_prompt() = 1;
 	ret = read_line(data->line);
 	while (ret >= 0)
 	{
-		//printf("ret %d\n", ret);
 		if (ret == 0)
-			handle_ctrl_d(data);
+			ctrl_d(data);
 		if (ret == -1)
 			panic(ERR_READ);
-		if (!is_line_empty(data->line))
+		if (!line_empty(data->line))
 		{
-			*should_prompt_be_printed() = 0;
+			*print_prompt() = 0;
 			return ;
 		}
 		ft_putstr_fd(MSG_PROMPT, 1);
 		ret = read_line(data->line);
-	}
-}
-
-void	sighandler(int signum)
-{
-	if (signum == SIGINT)
-	{
-		printf("\n");
-		if (*should_prompt_be_printed())
-		{
-			ft_bzero(get_data()->line->str, get_data()->line->capacity);
-			get_data()->line->len = 0;
-			ft_putstr_fd(MSG_PROMPT, 1);
-		}
-		get_data()->sigint_received = 1;
-		env_set("?", "130");
-	}
-	else if (signum == SIGQUIT)
-	{
-		if (*should_prompt_be_printed() == 1)
-		{
-			printf("\n");
-			ft_putstr_fd(MSG_PROMPT, 1);
-			ft_bzero(get_data()->line->str, get_data()->line->capacity);
-			get_data()->line->len = 0;
-		}
-		else
-		{
-			printf("Quit\n");
-			get_data()->sigquit_received = 1;
-			env_set("?", "131");
-		}
 	}
 }
 
@@ -114,12 +81,12 @@ int		main(int argc, char **argv, char **env)
 	(void) argv;
 	data = get_data();
 	ft_bzero(data, sizeof(t_data));
-	env_init(env);
-	signal(SIGINT, &sighandler);
-	signal(SIGQUIT, &sighandler);
+	env_init(env); //change dis too
+	signal(SIGINT, &sig_int);
+	signal(SIGQUIT, &sig_quit);
 	while (1)
 	{
-		wait_input(data); 
+		wait_input(data); //done till here
 		parse_line(data);
 		parse_cmds(data);
 		if (parse_redirs(data) == ERR)

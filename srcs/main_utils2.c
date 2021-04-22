@@ -1,10 +1,47 @@
 //header
 
 #include "minishell.h"
+#include <signal.h>
 #include <unistd.h>
 #include <stdlib.h>
 
-void	handle_ctrl_d(t_data *data)
+void	sig_int(int sig)
+{
+	if (sig == SIGINT)
+	{
+		printf("\n");
+		if (*print_prompt())
+		{
+			ft_bzero(get_data()->line->str, get_data()->line->capacity);
+			get_data()->line->len = 0;
+			ft_putstr_fd(MSG_PROMPT, 1);
+		}
+		get_data()->sigint_received = 1;
+		env_set("?", "130");
+	}
+}
+
+void	sig_quit(int sig)
+{
+	if (sig == SIGQUIT)
+	{
+		if (*print_prompt() == 1)
+		{
+			printf("\n");
+			ft_putstr_fd(MSG_PROMPT, 1);
+			ft_bzero(get_data()->line->str, get_data()->line->capacity);
+			get_data()->line->len = 0;
+		}
+		else
+		{
+			printf("Quit\n");
+			get_data()->sigquit_received = 1;
+			env_set("?", "131");
+		}
+	}
+}
+
+void	ctrl_d(t_data *data)
 {
 	free_data(data);
 	env_shutdown();

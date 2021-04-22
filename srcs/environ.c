@@ -15,7 +15,6 @@ void	env_init_fill(char **environ, t_env **prev_next)
 
 	while (*environ)
 	{
-		//printf("%s\n", *environ);
 		if (env_isvalid_equality(*environ, false))
 		{
 			entry = malloc(sizeof(t_env));
@@ -43,10 +42,7 @@ void	env_init(char **environ)
 	if (*prev_next)
 		panic(ERR_DOUBLE_INIT_ENV_DICO);
 	env_init_fill(environ, prev_next);
-	//if (env_get("sapo"))
-	//	printf("got");
 	env_set("?", "0");
-	//printf("sapo %s\n", env_get("?")->key);
 }
 
 void	env_shutdown(void)
