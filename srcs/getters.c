@@ -4,47 +4,44 @@
 
 t_env	*env_get(const char *key)
 {
-	t_env	*entry;
+	t_env	*current;
 
-	entry = *(env_dictionary());
-	if (!entry)
+	current = *(env_dictionary());
+	if (!current)
 		panic(ERR_UNINIT_ENV_DICO);
-	while (entry && ft_strcmp(entry->key, key) != 0)
-	{
-		//printf("key %s val %s\n", entry->key, entry->value);
-		entry = entry->next;
-	}
-	return (entry);
+	while (current && ft_strcmp(current->key, key) != 0)
+		current = current->next;
+	return (current);
 }
 
 char	*env_get_value(const char *key)
 {
-	t_env	*entry;
+	t_env	*current;
 
-	entry = env_get(key);
-	if (!entry)
+	current = env_get(key);
+	if (!current)
 		return (NULL);
-	return (entry->value);
+	return (current->value);
 }
 
 char	**env_get_array(void)
 {
 	size_t	listlen;
-	t_env	*entry;
+	t_env	*current;
 	char	**envs;
 	char	**envs_cpy;
 
-	entry = *(env_dictionary());
-	listlen = env_listlen(entry);
+	current = *(env_dictionary());
+	listlen = env_listlen(current);
 	envs = malloc(sizeof(char*) * (listlen + 1));
 	if (!envs)
 		panic(ERR_MALLOC);
 	envs_cpy = envs;
-	while (entry)
+	while (current)
 	{
-		if (!env_isinternal(entry->key))
-			*(envs_cpy++) = env_toequality(entry);
-		entry = entry->next;
+		if (!env_isinternal(current->key))
+			*(envs_cpy++) = env_toequality(current);
+		current = current->next;
 	}
 	*envs_cpy = NULL;
 	return (envs);

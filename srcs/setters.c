@@ -2,16 +2,16 @@
 
 #include "minishell.h"
 
-t_env	*env_create(char *equality)
+t_env	*env_create(char *env_str)
 {
 	char	*key;
 	char	*value;
 	t_env	*env;
 
-	key = env_parse_key(equality);
+	key = env_parse_key(env_str);
 	if (!key)
 		panic(ERR_MALLOC);
-	value = env_parse_value(equality);
+	value = env_parse_value(env_str);
 	if (!value)
 		panic(ERR_MALLOC);
 	env = (env_set(key, value));
@@ -22,40 +22,40 @@ t_env	*env_create(char *equality)
 
 static t_env	*env_set_append(const char *key, const char *value)
 {
-	t_env	**prev_next;
-	t_env	*entry;
+	t_env	**env_start;
+	t_env	*current;
 
-	prev_next = env_dictionary();
-	if (!(*prev_next))
+	env_start = env_dictionary();
+	if (!(*env_start))
 		panic(ERR_UNINIT_ENV_DICO);
-	while (*prev_next)
-		prev_next = &((*prev_next)->next);
-	entry = malloc(sizeof(t_env));
-	if (!entry)
+	while (*env_start)
+		env_start = &((*env_start)->next);
+	current = malloc(sizeof(t_env));
+	if (!current)
 		panic(ERR_MALLOC);
-	entry->key = ft_strdup(key);
-	if (!entry->key)
+	current->key = ft_strdup(key);
+	if (!current->key)
 		panic(ERR_MALLOC);
-	entry->value = ft_strdup(value);
-	if (!entry->value)
+	current->value = ft_strdup(value);
+	if (!current->value)
 		panic(ERR_MALLOC);
-	entry->next = NULL;
-	*prev_next = entry;
-	return (entry);
+	current->next = NULL;
+	*env_start = current;
+	return (current);
 }
 
 t_env	*env_set(const char *key, const char *value)
 {
-	t_env	*entry;
+	t_env	*current;
 
-	entry = env_get(key);
-	if (entry)
+	current = env_get(key);
+	if (current)
 	{
-		free(entry->value);
-		entry->value = ft_strdup(value);
-		if (!entry->value)
+		free(current->value);
+		current->value = ft_strdup(value);
+		if (!current->value)
 			panic(ERR_MALLOC);
-		return (entry);
+		return (current);
 	}
 	else
 		return (env_set_append(key, value));
@@ -63,23 +63,23 @@ t_env	*env_set(const char *key, const char *value)
 
 void	env_unset(const char *key)
 {
-	t_env	**prev_next;
-	t_env	*entry;
+	t_env	**env_start;
+	t_env	*current;
 
-	prev_next = env_dictionary();
-	entry = *prev_next;
-	if (!entry)
+	env_start = env_dictionary();
+	current = *env_start;
+	if (!current)
 		panic(ERR_UNINIT_ENV_DICO);
-	while (entry && ft_strcmp(entry->key, key) != 0)
+	while (current && ft_strcmp(current->key, key) != 0)
 	{
-		prev_next = &(entry->next);
-		entry = entry->next;
+		env_start = &(current->next);
+		current = current->next;
 	}
-	if (entry)
+	if (current)
 	{
-		*prev_next = entry->next;
-		free(entry->key);
-		free(entry->value);
-		free(entry);
+		*env_start = current->next;
+		free(current->key);
+		free(current->value);
+		free(current);
 	}
 }

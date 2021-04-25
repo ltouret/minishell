@@ -21,19 +21,19 @@ t_env_equality	env_isvalid_equality(const char *str, bool sanitizename)
 	return (ENV_EQ_UNIFIED);
 }
 
-char	*env_parse_key(const char *eqlt)
+char	*env_parse_key(const char *env_char)
 {
 	char	*delimiter;
 
-	delimiter = ft_strchr(eqlt, '=');
-	return (ft_substr(eqlt, 0, delimiter - eqlt));
+	delimiter = ft_strchr(env_char, '=');
+	return (ft_substr(env_char, 0, delimiter - env_char));
 }
 
-char	*env_parse_value(const char *eqlt)
+char	*env_parse_value(const char *env_char)
 {
 	char	*delimiter;
 
-	delimiter = ft_strchr(eqlt, '=');
+	delimiter = ft_strchr(env_char, '=');
 	return (ft_strdup(delimiter + 1));
 }
 
@@ -41,15 +41,15 @@ char	*env_toequality(t_env *env)
 {
 	size_t	keyl;
 	size_t	vall;
-	char	*eqlt;
+	char	*env_char;
 
 	keyl = ft_strlen(env->key);
 	vall = ft_strlen(env->value);
-	eqlt = malloc(sizeof(char) * (keyl + vall + 2));
-	if (!eqlt)
+	env_char = malloc(sizeof(char) * (keyl + vall + 2));
+	if (!env_char)
 		panic(ERR_MALLOC);
-	ft_memcpy(eqlt, env->key, keyl);
-	*(eqlt + keyl) = '=';
-	ft_memcpy(eqlt + keyl + 1, env->value, vall + 1);
-	return (eqlt);
+	ft_memcpy(env_char, env->key, keyl);
+	*(env_char + keyl) = '=';
+	ft_memcpy(env_char + keyl + 1, env->value, vall + 1);
+	return (env_char);
 }

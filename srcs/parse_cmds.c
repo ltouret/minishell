@@ -5,50 +5,50 @@
 #include "libft.h"
 #include "minishell.h"
 
-void	fill_pipe_fds(t_list *pipe_cmds)
+static void	fill_pipe(t_list *pipe_cmds)
 {
-	t_list	*pipe_cmd_elem;
+	t_list	*current;
 	int		pipefd[2];
 	int		lastpipefd[2];
 
-	pipe_cmd_elem = pipe_cmds;
-	while (pipe_cmd_elem)
+	current = pipe_cmds;
+	while (current)
 	{
-		if (pipe_cmd_elem == pipe_cmds && pipe_cmd_elem->next)
+		if (current == pipe_cmds && current->next)
 		{
 			pipe(pipefd);
-			((t_pipe_cmd *)pipe_cmd_elem->content)->fd_in = STDIN_FILENO;
-			((t_pipe_cmd *)pipe_cmd_elem->content)->fd_out = pipefd[1];
+			((t_pipe_cmd *)current->content)->fd_in = STDIN_FILENO;
+			((t_pipe_cmd *)current->content)->fd_out = pipefd[1];
 		}
-		else if (pipe_cmd_elem != pipe_cmds && pipe_cmd_elem->next)
+		else if (current != pipe_cmds && current->next)
 		{
 			lastpipefd[0] = pipefd[0];
 			pipe(pipefd);
-			((t_pipe_cmd *)pipe_cmd_elem->content)->fd_in = lastpipefd[0];
-			((t_pipe_cmd *)pipe_cmd_elem->content)->fd_out = pipefd[1];
+			((t_pipe_cmd *)current->content)->fd_in = lastpipefd[0];
+			((t_pipe_cmd *)current->content)->fd_out = pipefd[1];
 		}
-		else if (pipe_cmd_elem != pipe_cmds && !pipe_cmd_elem->next)
-			((t_pipe_cmd *)pipe_cmd_elem->content)->fd_in = pipefd[0];
-		pipe_cmd_elem = pipe_cmd_elem->next;
+		else if (current != pipe_cmds && !current->next)
+			((t_pipe_cmd *)current->content)->fd_in = pipefd[0];
+		current = current->next;
 	}
 }
 
-void	skip_until_pipe(t_string *cmd, unsigned int *i)
+static void	skip_until_pipe(t_string *cmd, unsigned int *i)
 {
-	int				inside_quote;
-	int				inside_dquote;
+	int				quote;
+	int				dquote;
 
-	inside_quote = 0;
-	inside_dquote = 0;
+	quote = 0;
+	dquote = 0;
 	while (*i <= cmd->len)
 	{
-		if (cmd->str[*i] == '"' && !inside_quote && *i > 0
+		if (cmd->str[*i] == '"' && !quote && *i > 0
 			&& cmd->str[*i - 1] != '\\')
-			inside_dquote = !inside_dquote;
-		else if (cmd->str[*i] == '\'' && !inside_dquote && *i > 0
+			dquote = !dquote;
+		else if (cmd->str[*i] == '\'' && !dquote && *i > 0
 			&& cmd->str[*i - 1] != '\\')
-			inside_quote = !inside_quote;
-		else if (cmd->str[*i] == '|' && !inside_quote && !inside_dquote)
+			quote = !quote;
+		else if (cmd->str[*i] == '|' && !quote && !dquote)
 		{
 			(*i)++;
 			break ;
@@ -57,7 +57,7 @@ void	skip_until_pipe(t_string *cmd, unsigned int *i)
 	}
 }
 
-t_pipe_cmd	*get_next_pipe_cmd(t_string *cmd, unsigned int *i)
+static t_pipe_cmd	*get_next_pipe_cmd(t_string *cmd, unsigned int *i)
 {
 	int				start;
 	t_pipe_cmd		*next_pipe_cmd;
@@ -74,22 +74,22 @@ t_pipe_cmd	*get_next_pipe_cmd(t_string *cmd, unsigned int *i)
 	return (next_pipe_cmd);
 }
 
-t_list	*get_pipes_cmds(t_string *cmd)
+static t_list	*get_pipes_cmds(t_string *cmd)
 {
 	t_list			*pipes_cmds;
-	t_list			*new_elem;
+	t_list			*new;
 	unsigned int	i;
 
 	pipes_cmds = NULL;
 	i = 0;
 	while (i < cmd->len)
 	{
-		new_elem = ft_lstnew("", get_next_pipe_cmd(cmd, &i));
-		if (!(new_elem))
+		new = ft_lstnew("", get_next_pipe_cmd(cmd, &i));
+		if (!(new))
 			panic(ERR_MALLOC);
-		((t_pipe_cmd *)new_elem->content)->fd_in = STDIN_FILENO;
-		((t_pipe_cmd *)new_elem->content)->fd_out = STDOUT_FILENO;
-		ft_lstadd_back(&pipes_cmds, new_elem);
+		((t_pipe_cmd *)new->content)->fd_in = STDIN_FILENO;
+		((t_pipe_cmd *)new->content)->fd_out = STDOUT_FILENO;
+		ft_lstadd_back(&pipes_cmds, new);
 	}
 	return (pipes_cmds);
 }
@@ -103,9 +103,8 @@ void	parse_cmds(t_data *data)
 	while (cmd_elem)
 	{
 		cmd = cmd_elem->content;
-		//printf("cmd recieved: %s\n", cmd->cmd->str);
 		cmd->pipe_cmds = get_pipes_cmds(cmd->cmd);
-		fill_pipe_fds(cmd->pipe_cmds);
+		fill_pipe(cmd->pipe_cmds);
 		cmd_elem = cmd_elem->next;
 	}
 }

@@ -12,7 +12,7 @@ static int	cmd_after(t_string *line, int i)
 	return (1);
 }
 
-t_string	*check_err(t_string *next_cmd, int quote, int dquote)
+static t_string	*check_err(t_string *next_cmd, int quote, int dquote)
 {
 	if (dquote || quote)
 	{
@@ -62,7 +62,7 @@ static t_string	*next_cmd(t_string *line, unsigned int *i)
 t_error	parse_line(t_data *data)
 {
 	unsigned int	i;
-	t_list			*new_elem;
+	t_list			*new;
 	t_cmd			*cmd;
 
 	data->cmds = NULL;
@@ -79,10 +79,10 @@ t_error	parse_line(t_data *data)
 			free(cmd);
 			return (ERR);
 		}
-		new_elem = ft_lstnew("", cmd);
-		if (!new_elem)
+		new = ft_lstnew("", cmd);
+		if (!new)
 			panic(ERR_MALLOC);
-		ft_lstadd_back(&data->cmds, new_elem);
+		ft_lstadd_back(&data->cmds, new);
 	}
 	return (OK);
 }

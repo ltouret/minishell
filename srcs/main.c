@@ -81,15 +81,15 @@ int		main(int argc, char **argv, char **env)
 	(void) argv;
 	data = get_data();
 	ft_bzero(data, sizeof(t_data));
-	env_init(env); //change dis too
+	env_init(env);
 	signal(SIGINT, &sig_int);
 	signal(SIGQUIT, &sig_quit);
 	while (1)
 	{
-		wait_input(data); //done till here
+		wait_input(data);
 		parse_line(data);
 		parse_cmds(data);
-		if (parse_redirs(data) == ERR)
+		if (parse_redirs(data) == ERR) //done till here
 		{
 			free_data(data);
 			continue ;
