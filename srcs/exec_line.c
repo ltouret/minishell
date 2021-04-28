@@ -1,4 +1,14 @@
-//header
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_line.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/28 19:49:42 by ltouret           #+#    #+#             */
+/*   Updated: 2021/04/28 19:49:44 by ltouret          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
@@ -11,7 +21,6 @@ void	close_fds(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd)
 	t_list	*cmds_elem;
 	t_list	*pipe_cmd_elem;
 
-	//printf("heeeey\n");
 	cmds_elem = data->cmds;
 	while (cmds_elem)
 	{
@@ -32,7 +41,7 @@ void	close_fds(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd)
 	}
 }
 
-void	wait_for_all_process_to_finish(t_data *data, t_cmd *cmd)
+static void	wait_for_process(t_data *data, t_cmd *cmd)
 {
 	t_list		*pipe_cmd_elem;
 	int			status;
@@ -53,34 +62,25 @@ void	wait_for_all_process_to_finish(t_data *data, t_cmd *cmd)
 	}
 }
 
-void	exec_cmd(t_data *data, t_cmd *cmd)
+static void	exec_cmd(t_data *data, t_cmd *cmd)
 {
 	t_list	*pipe_cmd_elem;
 
 	data->env = env_get_array();
-	/*while (data->env)
-	{
-		printf("env array: %s\n", *data->env);
-		data->env++;
-	}*/
 	pipe_cmd_elem = cmd->pipe_cmds;
 	cmd->should_fork = !(pipe_cmd_elem && !(pipe_cmd_elem->next));
-	//printf("exec fork %d\n", !(pipe_cmd_elem && !(pipe_cmd_elem->next)));
 	while (pipe_cmd_elem)
 	{
 		if (((t_pipe_cmd *)pipe_cmd_elem->content)->cmd)
-		{
-			//printf("pipe cmd %s\n", ((t_pipe_cmd *)pipe_cmd_elem->content)->cmd);
 			ex_pipe_cmd(data, cmd, pipe_cmd_elem->content);
-		}
 		pipe_cmd_elem = pipe_cmd_elem->next;
 	}
 	close_fds(data, cmd, NULL);
-	wait_for_all_process_to_finish(data, cmd);
+	wait_for_process(data, cmd);
 	env_clear_array(data->env);
 }
 
-void	exec_line(t_data *data)
+void	exec_process(t_data *data)
 {
 	t_list	*cmds_elem;
 

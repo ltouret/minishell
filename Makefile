@@ -6,7 +6,7 @@
 #    By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/20 13:00:20 by ltouret           #+#    #+#              #
-#    Updated: 2021/04/25 20:45:28 by ltouret          ###   ########.fr        #
+#    Updated: 2021/04/26 20:02:46 by ltouret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ NAME = minishell
 SRCS = srcs/main.c srcs/main_utils1.c srcs/main_utils2.c srcs/errors.c\
 		srcs/parse_line.c srcs/parse_cmds.c srcs/parse_redirs.c\
 		srcs/parse_redirs_utils.c srcs/post_process.c\
-		srcs/post_process_utils.c srcs/post_process_fragments.c\
+		srcs/post_process_utils1.c srcs/post_process_utils2.c\
 		srcs/environ.c srcs/getters.c srcs/setters.c srcs/environ_utils1.c\
 		srcs/environ_utils2.c srcs/exec_line.c srcs/exec_pipe_cmd.c\
 		srcs/builtins.c srcs/cd.c srcs/echo.c srcs/env.c srcs/exit.c\

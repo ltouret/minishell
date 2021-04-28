@@ -1,4 +1,14 @@
-//header
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/28 19:57:52 by ltouret           #+#    #+#             */
+/*   Updated: 2021/04/28 19:58:01 by ltouret          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -11,6 +21,8 @@
 # include <errno.h>
 # include <sys/types.h> 
 # include "libft.h"
+
+# define MSG_PROMPT "This is a prompt please enter your cmd $ "
 
 typedef enum		e_error
 {
@@ -61,8 +73,6 @@ typedef enum e_builtin
 	BUILTINS_COUNT
 }					t_builtin;
 
-# define MSG_PROMPT "This is a prompt please enter your cmd $ "
-
 typedef struct		s_data
 {
 	char			**env;
@@ -103,8 +113,8 @@ typedef struct		s_pp_state
 	t_pipe_cmd		*cmd;
 	char			*cursor;
 	char			*anchor;
-	bool			in_quote;
-	bool			in_dquote;
+	bool			quote;
+	bool			dquote;
 }					t_pp_state;
 
 t_data		*get_data(void);
@@ -149,13 +159,10 @@ bool	env_isinternal(const char *key);
 bool	env_isinternal_char(const char c);
 size_t	env_get_name_len(const char *str);
 void	close_fds(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd);
-void	wait_for_all_process_to_finish(t_data *data, t_cmd *cmd);
-void	exec_cmd(t_data *data, t_cmd *cmd);
-void	exec_line(t_data *data);
+void	exec_process(t_data *data);
 int	exec_builtin(t_builtin bi, size_t argc, char **argv);
 t_error	builtins(t_builtin builtin, size_t argc, char **argv);
 t_builtin	get_builtin(char *command);
-void	exec_fork(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd, t_builtin bi);
 void	ex_pipe_cmd(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd);
 char	*whereis(const char *filepath);
 t_error	builtin_cd(size_t argc, char **argv);

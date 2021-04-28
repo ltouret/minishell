@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 14:32:30 by ltouret           #+#    #+#             */
-/*   Updated: 2021/03/31 19:59:49 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 19:23:35 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_list	*ft_lstnew(const char *name, void *content)
 
 	if ((ret = (t_list*)(malloc(sizeof(t_list)))))
 	{
-		ret->name = ft_strdup(name); 
+		ret->name = ft_strdup(name);
 		ret->content = content;
 		ret->next = NULL;
 	}

@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/20 08:03:48 by ltouret           #+#    #+#             */
-/*   Updated: 2021/03/31 20:00:37 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 19:23:12 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 typedef struct		s_list
 {
-	const char		*name; 
+	const char		*name;
 	void			*content;
 	struct s_list	*next;
 }					t_list;

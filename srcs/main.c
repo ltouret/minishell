@@ -1,4 +1,14 @@
-//header
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/28 19:50:35 by ltouret           #+#    #+#             */
+/*   Updated: 2021/04/28 19:50:43 by ltouret          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdio.h>
@@ -89,13 +99,13 @@ int		main(int argc, char **argv, char **env)
 		wait_input(data);
 		parse_line(data);
 		parse_cmds(data);
-		if (parse_redirs(data) == ERR) //done till here
+		if (parse_redirs(data) == ERR)
 		{
 			free_data(data);
 			continue ;
 		}
 		post_process(data); 
-		exec_line(data); 
+		exec_process(data); 
 		free_data(data);
 	}
 }

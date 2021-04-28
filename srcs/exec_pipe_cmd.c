@@ -1,8 +1,19 @@
-//header
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_pipe_cmd.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/28 19:49:51 by ltouret           #+#    #+#             */
+/*   Updated: 2021/04/28 19:49:54 by ltouret          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exec_fork(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd, t_builtin bi)
+static void	exec_fork(t_data *data, t_cmd *cmd,
+		t_pipe_cmd *pipe_cmd, t_builtin bi)
 {
 	char		*filepath;
 
@@ -16,13 +27,9 @@ void	exec_fork(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd, t_builtin bi)
 			exec_builtin(bi, pipe_cmd->argc, pipe_cmd->argv);
 		else
 		{
-			//remmember to try ls here!
 			filepath = whereis(pipe_cmd->cmd);
 			if (!filepath)
-			{
-				//printf("YOOO wtf dis shit\n");
 				print_warning(ERR_UNKNOWN_CMD);
-			}
 			else
 				execve(filepath, pipe_cmd->argv, data->env);
 		}
@@ -34,7 +41,7 @@ void	exec_fork(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd, t_builtin bi)
 	}
 }
 
-void	ex_pipe_cmd(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd)
+void		ex_pipe_cmd(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd)
 {
 	t_builtin	bi;
 	int			tmp_fdin;
@@ -42,7 +49,6 @@ void	ex_pipe_cmd(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd)
 
 	bi = get_builtin(pipe_cmd->cmd);
 	pipe_cmd->forked = cmd->should_fork || bi == BI_NONE;
-	//printf("pipe_cmd fork %d\n", !pipe_cmd->forked);
 	if (!pipe_cmd->forked)
 	{
 		tmp_fdin = dup(STDIN_FILENO);

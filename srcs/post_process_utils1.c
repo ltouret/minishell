@@ -1,4 +1,14 @@
-//header
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   post_process_utils1.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/28 19:58:49 by ltouret           #+#    #+#             */
+/*   Updated: 2021/04/28 19:58:50 by ltouret          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -33,7 +43,6 @@ void	pp_replace(t_pp_state *st, ssize_t oldlen, char *newword, t_string *str)
 	ft_memcpy(at, newword, newlen);
 	str->len -= oldlen - newlen;
 	st->cursor += newlen - 1;
-	//printf("at %s cursor %s str %s\n", at, st->cursor, str->str);
 }
 
 void	pp_strip(t_pp_state *st, ssize_t striplen, t_string *str)
@@ -43,9 +52,7 @@ void	pp_strip(t_pp_state *st, ssize_t striplen, t_string *str)
 	if (!striplen)
 		return ;
 	at = st->cursor;
-	//printf("strip %s\n", at);
 	ft_memmove(at, at + striplen, str->len - striplen - (at - str->str) + 1);
-	//printf("strip %s\n", at);
 	str->len -= striplen;
 	st->cursor--;
 }

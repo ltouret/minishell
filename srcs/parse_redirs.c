@@ -1,4 +1,14 @@
-//header
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_redirs.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/28 19:58:16 by ltouret           #+#    #+#             */
+/*   Updated: 2021/04/28 19:58:18 by ltouret          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -43,7 +53,8 @@ static t_string	*extract_file(t_string *redir)
 	return (file);
 }
 
-static void	handle_in(t_pipe_cmd *pipe_cmd, t_string *redir, t_string *file)
+static void	handle_redir_in(t_pipe_cmd *pipe_cmd,
+			t_string *redir, t_string *file)
 {
 	if (!ft_strncmp("<", redir->str, 1))
 	{
@@ -79,7 +90,7 @@ static void	handle_redir(t_pipe_cmd *pipe_cmd, t_string *redir)
 			print_warning(ERR_OPEN);
 	}
 	else
-		handle_in(pipe_cmd, redir, file);
+		handle_redir_in(pipe_cmd, redir, file);
 	ft_string_destroy(file);
 }
 
