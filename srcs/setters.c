@@ -6,13 +6,13 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:59:02 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:59:03 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:48:22 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_env	*env_create(char *env_str)
+t_env			*env_create(char *env_str)
 {
 	char	*key;
 	char	*value;
@@ -54,7 +54,7 @@ static t_env	*env_set_append(const char *key, const char *value)
 	return (current);
 }
 
-t_env	*env_set(const char *key, const char *value)
+t_env			*env_set(const char *key, const char *value)
 {
 	t_env	*current;
 
@@ -71,7 +71,7 @@ t_env	*env_set(const char *key, const char *value)
 		return (env_set_append(key, value));
 }
 
-void	env_unset(const char *key)
+void			env_unset(const char *key)
 {
 	t_env	**env_start;
 	t_env	*current;

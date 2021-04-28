@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:59:10 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:59:11 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:30:28 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ static char	*test_paths(char **paths, const char *filepath)
 	while (*paths)
 	{
 		pathname = path_join(*paths, filepath);
-		//printf("test pathname %s\n", pathname);
 		if (!pathname)
 			panic(ERR_MALLOC);
 		if (file_exists(pathname))
@@ -30,7 +29,7 @@ static char	*test_paths(char **paths, const char *filepath)
 	return (NULL);
 }
 
-char	*whereis(const char *filepath)
+char		*whereis(const char *filepath)
 {
 	char	*env_path;
 	char	**paths;

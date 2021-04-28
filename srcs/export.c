@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:50:21 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:50:23 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:43:13 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static t_error	builtin_export_printall(void)
 	return (OK);
 }
 
-t_error	builtin_export(size_t argc, char **argv)
+t_error			builtin_export(size_t argc, char **argv)
 {
 	t_env_equality	eqlt;
 

@@ -6,14 +6,14 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:58:21 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:58:23 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:44:16 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
 
-void	go_to_redir_end(t_string *pipe_cmd, unsigned int *i)
+void		go_to_redir_end(t_string *pipe_cmd, unsigned int *i)
 {
 	int	inside_quote;
 	int	inside_dquote;
@@ -51,7 +51,7 @@ t_string	*extract_redir(t_string *pipe_cmd, unsigned int i)
 	return (redir);
 }
 
-int	in_quote(t_pipe_cmd *pipe_cmd, int i, int inside_quote)
+int			in_quote(t_pipe_cmd *pipe_cmd, int i, int inside_quote)
 {
 	if (pipe_cmd->pipe_cmd->str[i] == '"' && !inside_quote && i > 0
 		&& pipe_cmd->pipe_cmd->str[i - 1] != '\\')

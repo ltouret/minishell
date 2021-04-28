@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:49:25 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:49:27 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:37:39 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_env_equality	env_isvalid_equality(const char *str, bool sanitizename)
 	return (ENV_EQ_UNIFIED);
 }
 
-char	*env_parse_key(const char *env_char)
+char			*env_parse_key(const char *env_char)
 {
 	char	*delimiter;
 
@@ -39,7 +39,7 @@ char	*env_parse_key(const char *env_char)
 	return (ft_substr(env_char, 0, delimiter - env_char));
 }
 
-char	*env_parse_value(const char *env_char)
+char			*env_parse_value(const char *env_char)
 {
 	char	*delimiter;
 
@@ -47,7 +47,7 @@ char	*env_parse_value(const char *env_char)
 	return (ft_strdup(delimiter + 1));
 }
 
-char	*env_toequality(t_env *env)
+char			*env_toequality(t_env *env)
 {
 	size_t	keyl;
 	size_t	vall;

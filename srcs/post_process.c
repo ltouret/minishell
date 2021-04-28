@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:58:44 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:58:46 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:29:50 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static bool	process_char(t_string *cmd, t_pp_state *st, char *cursor)
 	else if (*cursor == '\\')
 		process_escape(cmd, st, cursor);
 	else if (*cursor == '$')
-			process_env(cmd, st, cursor);
+		process_env(cmd, st, cursor);
 	else if (*cursor == '"' && ++strip)
 		st->dquote = !st->dquote;
 	else if (*cursor == '\'' && ++strip)
@@ -74,7 +74,7 @@ static void	init_state(t_pp_state *st, t_list *pipe_cmds)
 	st->anchor = st->cursor;
 }
 
-void	post_process(t_data *data)
+void		post_process(t_data *data)
 {
 	t_list		*cmds;
 	t_list		*pipe_cmds;

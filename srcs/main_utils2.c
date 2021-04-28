@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:50:52 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:52:32 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:49:46 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,3 @@ void	handle_error_code(t_data *data, int status)
 		env_set("?", status_str);
 	free(status_str);
 }
-

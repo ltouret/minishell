@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:58:28 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:58:42 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:48:54 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static t_error	path_trailslash(char **str)
 	return (OK);
 }
 
-t_error		path_pwd(char **str)
+t_error			path_pwd(char **str)
 {
 	char	buff[PATH_MAX];
 	t_error	err;

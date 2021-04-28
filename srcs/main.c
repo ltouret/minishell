@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:50:35 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:50:43 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:40:36 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "libft.h"
 #include <sys/types.h>
 
-int	line_empty(t_string *line)
+static int	line_empty(t_string *line)
 {
 	char	**splitted;
 	int		ret;
@@ -34,7 +34,7 @@ int	line_empty(t_string *line)
 	return (ret);
 }
 
-int	read_line(t_string *line)
+static int	read_line(t_string *line)
 {
 	char	buf[11];
 	int		ret;
@@ -57,7 +57,7 @@ int	read_line(t_string *line)
 	return (ret);
 }
 
-void	wait_input(t_data *data)
+static void	wait_input(t_data *data)
 {
 	int		ret;
 
@@ -83,12 +83,12 @@ void	wait_input(t_data *data)
 	}
 }
 
-int		main(int argc, char **argv, char **env)
+int			main(int argc, char **argv, char **env)
 {
 	t_data	*data;
 
-	(void) argc;
-	(void) argv;
+	(void)argc;
+	(void)argv;
 	data = get_data();
 	ft_bzero(data, sizeof(t_data));
 	env_init(env);
@@ -104,8 +104,8 @@ int		main(int argc, char **argv, char **env)
 			free_data(data);
 			continue ;
 		}
-		post_process(data); 
-		exec_process(data); 
+		post_process(data);
+		exec_process(data);
 		free_data(data);
 	}
 }

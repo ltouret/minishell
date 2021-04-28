@@ -6,13 +6,13 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:49:19 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:49:21 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:47:51 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_env	**env_dictionary(void)
+t_env		**env_dictionary(void)
 {
 	static t_env	*entries;
 
@@ -30,7 +30,7 @@ static void	env_init_fill(char **environ, t_env **env_start)
 			current = malloc(sizeof(t_env));
 			if (!current)
 				panic(ERR_MALLOC);
-			*env_start= current;
+			*env_start = current;
 			current->key = env_parse_key(*environ);
 			if (!current->key)
 				panic(ERR_MALLOC);
@@ -44,7 +44,7 @@ static void	env_init_fill(char **environ, t_env **env_start)
 	current->next = NULL;
 }
 
-void	env_init(char **environ)
+void		env_init(char **environ)
 {
 	t_env	**env_start;
 
@@ -55,7 +55,7 @@ void	env_init(char **environ)
 	env_set("?", "0");
 }
 
-void	env_shutdown(void)
+void		env_shutdown(void)
 {
 	t_env	*current;
 	t_env	*next;

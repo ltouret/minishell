@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:49:42 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:49:44 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:45:37 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-void	close_fds(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd)
+void		close_fds(t_data *data, t_cmd *cmd, t_pipe_cmd *pipe_cmd)
 {
 	t_list	*cmds_elem;
 	t_list	*pipe_cmd_elem;
@@ -80,7 +80,7 @@ static void	exec_cmd(t_data *data, t_cmd *cmd)
 	env_clear_array(data->env);
 }
 
-void	exec_process(t_data *data)
+void		exec_process(t_data *data)
 {
 	t_list	*cmds_elem;
 

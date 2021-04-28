@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:49:36 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:49:38 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:28:51 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,3 @@ void	print_warning(t_error err_code)
 	else
 		printf("Unknown error\n");
 }
-

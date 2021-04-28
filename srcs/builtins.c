@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:45:55 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 20:03:14 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:44:58 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_builtin	get_builtin(char *command)
 		return (BI_NONE);
 }
 
-t_error	builtins(t_builtin builtin, size_t argc, char **argv)
+t_error		builtins(t_builtin builtin, size_t argc, char **argv)
 {
 	if (builtin == BI_ECHO)
 		return (builtin_echo(argc, argv));
@@ -52,15 +52,12 @@ t_error	builtins(t_builtin builtin, size_t argc, char **argv)
 		return (ERR_UNIMPLENTED);
 }
 
-int	exec_builtin(t_builtin bi, size_t argc, char **argv)
+int			exec_builtin(t_builtin bi, size_t argc, char **argv)
 {
 	char		*cmd;
 	int			ret;
 
 	cmd = *argv;
-	/*unsigned int i = -1;
-	while (++i < argc)
-		printf("argv %d %s\n", i, argv[i]);*/
 	argv++;
 	argc--;
 	if (bi == BI_NONE)

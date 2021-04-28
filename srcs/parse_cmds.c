@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:58:05 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:58:07 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:41:50 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "libft.h"
 #include "minishell.h"
 
-static void	fill_pipe(t_list *pipe_cmds)
+static void			fill_pipe(t_list *pipe_cmds)
 {
 	t_list	*current;
 	int		pipefd[2];
@@ -43,7 +43,7 @@ static void	fill_pipe(t_list *pipe_cmds)
 	}
 }
 
-static void	skip_until_pipe(t_string *cmd, unsigned int *i)
+static void			skip_until_pipe(t_string *cmd, unsigned int *i)
 {
 	int				quote;
 	int				dquote;
@@ -84,7 +84,7 @@ static t_pipe_cmd	*get_next_pipe_cmd(t_string *cmd, unsigned int *i)
 	return (next_pipe_cmd);
 }
 
-static t_list	*get_pipes_cmds(t_string *cmd)
+static t_list		*get_pipes_cmds(t_string *cmd)
 {
 	t_list			*pipes_cmds;
 	t_list			*new;
@@ -104,7 +104,7 @@ static t_list	*get_pipes_cmds(t_string *cmd)
 	return (pipes_cmds);
 }
 
-void	parse_cmds(t_data *data)
+void				parse_cmds(t_data *data)
 {
 	t_list		*cmd_elem;
 	t_cmd		*cmd;

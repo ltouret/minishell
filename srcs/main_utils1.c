@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:50:46 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:50:47 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:46:28 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_data	*get_data(void)
 	return (&data);
 }
 
-int	*print_prompt(void)
+int		*print_prompt(void)
 {
 	static int	i = 0;
 

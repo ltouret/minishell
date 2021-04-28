@@ -6,14 +6,14 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:58:11 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:58:13 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:36:47 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
 
-static int	cmd_after(t_string *line, int i)
+static int		cmd_after(t_string *line, int i)
 {
 	while (line->str[i] && ft_strchr("\f\t \n\r\v", line->str[i]))
 		i++;
@@ -45,8 +45,7 @@ static t_string	*next_cmd(t_string *line, unsigned int *i)
 	int			quote;
 	int			dquote;
 
-	next_cmd = ft_string_new();
-	if (!next_cmd)
+	if (!(next_cmd = ft_string_new()))
 		panic(ERR_MALLOC);
 	dquote = 0;
 	quote = 0;
@@ -69,7 +68,7 @@ static t_string	*next_cmd(t_string *line, unsigned int *i)
 	return (check_err(next_cmd, quote, dquote));
 }
 
-t_error	parse_line(t_data *data)
+t_error			parse_line(t_data *data)
 {
 	unsigned int	i;
 	t_list			*new;

@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:58:16 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:58:18 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/04/28 21:42:35 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "libft.h"
 #include "minishell.h"
 
-static void	skip_start(t_string *redir, int *i)
+static void		skip_start(t_string *redir, int *i)
 {
 	if (redir->str[*i] == '>')
 		(*i)++;
@@ -53,7 +53,7 @@ static t_string	*extract_file(t_string *redir)
 	return (file);
 }
 
-static void	handle_redir_in(t_pipe_cmd *pipe_cmd,
+static void		handle_redir_in(t_pipe_cmd *pipe_cmd,
 			t_string *redir, t_string *file)
 {
 	if (!ft_strncmp("<", redir->str, 1))
@@ -66,7 +66,7 @@ static void	handle_redir_in(t_pipe_cmd *pipe_cmd,
 	}
 }
 
-static void	handle_redir(t_pipe_cmd *pipe_cmd, t_string *redir)
+static void		handle_redir(t_pipe_cmd *pipe_cmd, t_string *redir)
 {
 	t_string	*file;
 
@@ -94,7 +94,7 @@ static void	handle_redir(t_pipe_cmd *pipe_cmd, t_string *redir)
 	ft_string_destroy(file);
 }
 
-t_error	parse_redirs(t_data *data)
+t_error			parse_redirs(t_data *data)
 {
 	t_list		*cmd_elem;
 	t_list		*pipe_cmd_elem;
