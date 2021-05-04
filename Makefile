@@ -6,7 +6,7 @@
 #    By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/20 13:00:20 by ltouret           #+#    #+#              #
-#    Updated: 2021/04/26 20:02:46 by ltouret          ###   ########.fr        #
+#    Updated: 2021/05/04 20:03:12 by ltouret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,12 +38,14 @@ LIBFT_FLAGS	= -Llibft -lft
 
 INCLUDES	= -I libft
 
+CURSES		= -lncurses
+
 .c.o:
 		${CC} ${INCLUDES} ${CFLAGS} -c $< -o ${<:.c=.o}
 
 $(NAME): ${OBJS}
 		make -C libft 
-		${CC} ${OBJS} ${LIBFT_FLAGS} -o ${NAME} 
+		${CC} ${OBJS} ${LIBFT_FLAGS} -o ${NAME} ${CURSES} 
 
 all:	${NAME}
 
