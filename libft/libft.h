@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/20 08:03:48 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 19:23:12 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/05 12:56:02 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ t_string			*ft_string_push(t_string *string, char *to_append);
 t_string			*ft_string_push_char(t_string *string, char to_append);
 t_string			*ft_string_sub(t_string *string, size_t start, size_t len);
 t_string			*ft_string_remove(t_string *string, int start, int end);
+char				ft_string_pop(t_string *string);
 void				ft_string_destroy(t_string *string);
 void				*ft_memccpy(void *dst, void *src, int c, size_t n);
 void				*ft_memchr(const void *s, int c, size_t n);

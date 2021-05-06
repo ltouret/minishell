@@ -42,19 +42,70 @@ void		term_echo()
 	tcsetattr(0, 0, s_termios);
 }
 
+int			*get_counter()
+{
+	static int	i = 0;
+
+	return (&i);
+}
+
 int			mychar(int c)
 {
-	//printf("%d\n", c);
 	write(1,&c,1);
 	return 1;
 }
 
-void		del_char()
+void		del_char(t_string *line)
 {
-	char *kr = tgetstr("le", NULL);
-	tputs (kr, 1, mychar);
-	kr = tgetstr("ce", NULL);
-	tputs (kr, 1, mychar);
+	int		co;
+	char	*kr;
+
+	co = tgetnum("co");
+	(void) co;
+	if (line->len > 0 && *get_counter() > ft_strlen(MSG_PROMPT)) 
+	{
+		if ((*get_counter() % co) == 0)
+		{
+			kr = tgetstr("up", NULL);
+			tputs (kr, 1, mychar);
+			kr = tgetstr("ch", NULL);
+			tputs(tgoto(kr, 0, co), 1, mychar);
+			//printf("\nc %d\n", *get_counter());
+			//kr = tgetstr("le", NULL);
+			//tputs (kr, 1, mychar);
+			kr = tgetstr("ce", NULL);
+			tputs (kr, 1, mychar);
+		ft_string_pop(line);
+		(*get_counter())--;
+			return;
+		}
+		kr = tgetstr("le", NULL);
+		tputs (kr, 1, mychar);
+		kr = tgetstr("dc", NULL);
+		tputs (kr, 1, mychar);
+		ft_string_pop(line);
+		(*get_counter())--;
+	}
+	//int li = tgetnum("li");
+	//printf("co %d li %d\n", kra, kre);
+	//printf("co %d\n", co);
+	//tputs(tgoto(kr, 0, 2), 1, mychar);
+}
+
+int			check_newline(t_string *line)
+{
+	size_t		i;
+	char		c;
+
+	i = 0;
+	while (i < line->len)
+	{
+		c = line->str[i];
+		if (c != '\n') //maybe check if there is a printable char
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 static int	read_line(t_string *line)
@@ -62,21 +113,29 @@ static int	read_line(t_string *line)
 	char	buf[11];
 	int		ret;
 	int		flag;
+	int		co;
 
+	co = tgetnum("co");
 	flag = 0;
 	while (!flag)
 	{
 		ret = read(0, buf, 10);
-		if (*buf != 27 || *buf != 127)
+		//printf("buf %d\n", *buf);
+		if ((*buf > 31 && *buf < 127) || *buf == '\n')
 		{
-			//printf("%d\n", *buf);
+			(*get_counter())++;
 			write(1,buf,1);
+			if ((*get_counter() % co) == 0)
+				write(1,"\n",1);
+			//printf("counter %d\n", *get_counter());
 		}
-		if (*buf == 127) // need to erase char in memeory too
+		if (*buf == 127)
 		{
-			del_char();
+			del_char(line);
 			continue;
 		}
+		if (*buf == 4 && check_newline(line) == 0)
+			ctrl_d(get_data());
 		if (ret == -1)
 			return (-1);
 		if (ret == 0 && line->len == 0)
@@ -85,7 +144,12 @@ static int	read_line(t_string *line)
 		if (!(ft_string_push(line, buf)))
 			panic(ERR_MALLOC);
 		if (line->str[line->len - 1] == '\n')
+		{
+			//printf("%d\n", *get_counter());
+			*get_counter() = ft_strlen(MSG_PROMPT);
+			//printf("%d\n", *get_counter());
 			flag = 1;
+		}
 	}
 	return (ret);
 }
@@ -165,6 +229,7 @@ int			main(int argc, char **argv, char **env)
 	signal(SIGQUIT, &sig_quit);
 	term_test(argc, argv);
 	term_echo();
+	*get_counter() = ft_strlen(MSG_PROMPT);
 	while (1)
 	{
 		wait_input(data);
@@ -177,7 +242,7 @@ int			main(int argc, char **argv, char **env)
 		}
 		post_process(data);
 		exec_process(data);
-		//printf("%s\n",data->line->str);
+		printf("%s",data->line->str);
 		free_data(data);
 	}
 }

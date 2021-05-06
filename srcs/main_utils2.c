@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:50:52 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 21:49:46 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/06 17:25:04 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	sig_int(int sig)
 		printf("\n");
 		if (*print_prompt())
 		{
+			//*get_counter() = 0;
 			ft_bzero(get_data()->line->str, get_data()->line->capacity);
 			get_data()->line->len = 0;
 			ft_putstr_fd(MSG_PROMPT, 1);
@@ -37,8 +38,8 @@ void	sig_quit(int sig)
 	{
 		if (*print_prompt() == 1)
 		{
-			printf("\n");
-			ft_putstr_fd(MSG_PROMPT, 1);
+			//printf("\n");
+			//ft_putstr_fd(MSG_PROMPT, 1);
 			ft_bzero(get_data()->line->str, get_data()->line->capacity);
 			get_data()->line->len = 0;
 		}

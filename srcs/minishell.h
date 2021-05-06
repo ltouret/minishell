@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:57:52 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 21:56:08 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/06 19:46:26 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <sys/types.h>
 # include "libft.h"
 
-# define MSG_PROMPT "This is a prompt please enter your cmd $ "
+# define MSG_PROMPT "$ "
 
 typedef enum		e_error
 {
