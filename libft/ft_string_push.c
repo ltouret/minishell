@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 17:39:13 by ltouret           #+#    #+#             */
-/*   Updated: 2021/03/29 17:39:26 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/07 23:48:57 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ t_string	*ft_string_push(t_string *string, char *to_append)
 	size_t	to_append_len;
 	char	*tmp;
 
+	if (!to_append || !string)
+		return (NULL);
 	to_append_len = ft_strlen(to_append);
 	if (string->capacity < string->len + to_append_len + 1)
 	{

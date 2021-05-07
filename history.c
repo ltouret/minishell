@@ -4,7 +4,14 @@
 #include <stdio.h>
 #include "libft/libft.h"
 
-int		get_map(char ***hist, char *line)
+typedef struct	s_history {
+	char		**history; //try to dos this with t_string
+	t_string	*path;
+	int			hist_fd;
+	int			size;
+}				t_history;
+
+int		add_line(char ***hist, char *line)
 {
 	int		i;
 	char	**tmp;
@@ -31,31 +38,51 @@ int		get_map(char ***hist, char *line)
 	return (1); //check this and return type
 }
 
-int		open_hist()
+void	read_hist(t_history *history)
 {
-	char		*home;
-	t_string	*hist_str;
-	int			hist_fd;
-	char		**hist;
-	hist = NULL;
+	char	*line;
+	int		gnl;
 
-	get_map(&hist, "sapo");
-	printf("%s\n", hist[0]);
-	get_map(&hist, "qpasa");
-	printf("%s\n", hist[1]);
-	if (!(home = getenv("HOME")))
+	gnl = 1;
+	while (gnl == 1)
+	{
+		gnl = get_next_line(history->hist_fd, &line);
+		if (gnl == 1)
+		{
+			add_line(&history->history, line);
+			history->size++;
+		}
+	}
+}
+
+void	print_hist(t_history *history)
+{
+	int		i;
+
+	i = -1;
+	while (history->size > ++i)
+		printf("%d %s\n", i + 1, history->history[i]);
+}
+
+int		open_hist(t_history *history)
+{
+	history->path = ft_string_new();
+	if (!(ft_string_push(history->path,  getenv("HOME"))))
 		return (0); // err malloc
-	if (!(hist_str = ft_string_new()))
+	if (!(ft_string_push(history->path,  "/.bash_history")))
 		return (0); // err malloc
-	if (!(ft_string_push(hist_str,  getenv("HOME"))))
-		return (0); // err malloc
-	if (!(ft_string_push(hist_str,  "/.bash_history")))
-		return (0); // err malloc
-	//hist_fd = open(hist_str,);
-	printf("%s\n", hist_str->str);
+	history->hist_fd = open(history->path->str, O_RDONLY);
+	if (history->hist_fd == -1)
+		return (1); // err no file found - set errno!!
+	read_hist(history);
+	close(history->hist_fd);
 }
 
 int		main()
 {
-	open_hist();
+	t_history	history;
+
+	ft_bzero(&history, sizeof(t_history));
+	open_hist(&history);
+	print_hist(&history);
 }
