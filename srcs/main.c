@@ -70,9 +70,6 @@ void		del_char(t_string *line)
 			tputs (kr, 1, mychar);
 			kr = tgetstr("ch", NULL);
 			tputs(tgoto(kr, 0, co), 1, mychar);
-			//printf("\nc %d\n", *get_counter());
-			//kr = tgetstr("le", NULL);
-			//tputs (kr, 1, mychar);
 			kr = tgetstr("ce", NULL);
 			tputs (kr, 1, mychar);
 		ft_string_pop(line);
@@ -108,6 +105,20 @@ int			check_newline(t_string *line)
 	return (0);
 }
 
+void		is_arrow(char *buf)
+{
+	//char *kl = tgetstr("kl", NULL);
+	//char *kr = tgetstr("kr", NULL);
+
+	//write(1,ku,3);
+	//write(1,buf,3);
+	if (strncmp(buf, "\x1b[A", 3) == 0)
+		printf("up\n");
+	if (strncmp(buf, "\x1b[B", 3) == 0)
+		printf("down\n");
+
+}
+
 static int	read_line(t_string *line)
 {
 	char	buf[11];
@@ -120,7 +131,8 @@ static int	read_line(t_string *line)
 	while (!flag)
 	{
 		ret = read(0, buf, 10);
-		//printf("buf %d\n", *buf);
+		//printf("buf %d %c\n", *buf,  *buf);
+		//write(1,buf,1);
 		if ((*buf > 31 && *buf < 127) || *buf == '\n')
 		{
 			(*get_counter())++;
@@ -134,15 +146,22 @@ static int	read_line(t_string *line)
 			del_char(line);
 			continue;
 		}
-		if (*buf == 4 && check_newline(line) == 0)
+		if (*buf == 4 && check_newline(line) == 0) //why check new line doesnt work if i press any espace chararter? like an arrow
 			ctrl_d(get_data());
+		if (*buf == 27)
+		{
+			//printf("num of chars %d\n", ret);
+			is_arrow(buf);
+		}
 		if (ret == -1)
 			return (-1);
 		if (ret == 0 && line->len == 0)
 			return (ret);
 		buf[ret] = '\0';
 		if (!(ft_string_push(line, buf)))
+		{
 			panic(ERR_MALLOC);
+		}
 		if (line->str[line->len - 1] == '\n')
 		{
 			//printf("%d\n", *get_counter());
@@ -206,6 +225,7 @@ void		term_test(int argc, char **argv)
 	s_termios->c_lflag &= ~(ICANON); /* Met le terminal en mode canonique. La fonction Read recevra les entrées clavier en direct sans attendre qu'on appuie sur Enter */
 	//s_termios->c_lflag |= (ECHOE); /* Les touches tapées au clavier ne s'affficheront plus dans le terminal */
 	//s_termios->c_lflag &= ~(ECHOE); /* Les touches tapées au clavier ne s'affficheront plus dans le terminal */
+	//s_termios->c_lflag &= ~(ECHOE); /* Les touches tapées au clavier ne s'affficheront plus dans le terminal */
 	tcsetattr(0, 0, s_termios);
 	(void)cl_cap;
 	(void)cm_cap;
@@ -227,9 +247,10 @@ int			main(int argc, char **argv, char **env)
 	env_init(env);
 	signal(SIGINT, &sig_int);
 	signal(SIGQUIT, &sig_quit);
-	term_test(argc, argv);
-	term_echo();
+	term_test(argc, argv); //merege this shit
+	term_echo(); //merge this shit
 	*get_counter() = ft_strlen(MSG_PROMPT);
+	//write(1,"\x1b[A",3); exit chars
 	while (1)
 	{
 		wait_input(data);
