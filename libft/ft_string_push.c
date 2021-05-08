@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 17:39:13 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/07 23:48:57 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/08 23:58:27 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ t_string	*ft_string_push_char(t_string *string, char to_append)
 {
 	char	*tmp;
 
+	if (!string)
+		return (NULL);
 	if (string->capacity < string->len + 2)
 	{
 		tmp = malloc(sizeof(char) * (string->len + 2));
