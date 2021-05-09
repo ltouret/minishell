@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 17:39:13 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/08 23:58:27 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/09 16:25:18 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,6 @@ t_string	*ft_string_push_char(t_string *string, char to_append)
 		string->str[string->len] = to_append;
 		string->str[string->len + 1] = '\0';
 	}
-	string->len += 1;
+	string->len = ft_strlen(string->str);
 	return (string);
 }

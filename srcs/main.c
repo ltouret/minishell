@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/08 22:42:36 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/09 02:26:35 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/09 16:26:13 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static int	line_empty(t_string *line)
 	int		ret;
 
 	splitted = ft_split(line->str, "\f\t \n\r\v");
+	//write(1,"dis\n",4);
 	if (!splitted)
 		panic(ERR_MALLOC);
 	if (!*splitted)
@@ -51,36 +52,68 @@ void		print_escape(char *buf)
 	printf("\n");
 }
 
+void		getxy(int *x, int *y)
+{
+	//This func will get the current row & row (y, x)
+	/*
+	this func will bge called the first time the code is executed to regulate 
+	how the code erases char at the start of a line
+	it will be called and give x as starting char so that erase_char func doesnt 
+	erase the "start" of my prompt.
+	should call this func after each prompt to update starting x of prompt each 
+	time. 
+	*/
+	
+	char	buf[10];
+	int		i = 0;
+	int		ch = 0;
+	int		ret = 0;
+
+	write(1, "\x1b[6n", 4);
+	while (ch != 'R')
+	{
+		ret = read(0, &ch, 1);
+		if (!ret)
+			return ;
+		buf[i] = ch;
+		i++;
+	}
+	if (y)
+		*y = ft_atoi(ft_strchr(buf, '[') + 1);
+	if (x)
+		*x = ft_atoi(ft_strchr(buf, ';') + 1);
+	//printf("y %d x %d\n", *y, *x);
+	//printf("%s\n", ft_strchr(buf, '['));
+}
+
 void		del_char(t_string *line)
 {
-	int			row;
 	t_string	*buf;
 	char		*itoa;
 
-	row = get_data()->x;
-	itoa = ft_itoa(row);
+	itoa = ft_itoa(get_data()->x);
 	buf = ft_string_new();
 	ft_string_push(buf, "\x1b[");
 	ft_string_push(buf, itoa);
 	free(itoa);
 	if (!(ft_string_push_char(buf, 'G')))
-		return ; // malloc err
-	if (line->len > 0 && get_data()->x_counter > get_data()->x_current) 
+		return ; // malloc error
+	//printf("coun %d curr %d\n", get_data()->y_coun, get_data()->y_curr);
+	if (line->len > 0) // && (get_data()->x_prompt - 1 < get_data()->x_curr
+		//|| get_data()->y_coun < get_data()->y_curr))
 	{
-		if ((get_data()->x_counter % row) == 0)
+		if (get_data()->x_curr == 1)
 		{
 			write(1, "\x1b[F", 3);
 			write(1, buf->str, buf->len);
 			write(1, "\x1b[X", 3);
 			ft_string_pop(line);
-			(get_data()->x_counter)--;
 			return ;
 		}
-		write(1, "\b", 1);
-		write(1, "\x1b[X", 3);
+		write(1, "\b\x1b[X", 4);
 		ft_string_pop(line);
-		(get_data()->x_counter)--;
 	}
+	ft_string_destroy(buf);
 }
 
 int			check_newline(t_string *line)
@@ -116,36 +149,12 @@ void		is_arrow(char *buf)
 	}
 }
 
-void		getxy(int *x, int *y)
+void		get_max_xy(t_data *data)
 {
-	//This func will get the current row & row (y, x)
-	/*
-	this func will bge called the first time the code is executed to regulate 
-	how the code erases char at the start of a line
-	it will be called and give x as starting char so that erase_char func doesnt 
-	erase the "start" of my prompt.
-	should call this func after each prompt to update starting x of prompt each 
-	time. 
-	*/
-	
-	char	buf[10];
-	int		i = 0;
-	int		ch = 0;
-	int		ret = 0;
-
-	write(1, "\x1b[6n", 4);
-	while (ch != 'R')
-	{
-		ret = read(0, &ch, 1);
-		if (!ret)
-			return ;
-		buf[i] = ch;
-		i++;
-	}
-	*y = ft_atoi(ft_strchr(buf, '[') + 1);
-	*x = ft_atoi(ft_strchr(buf, ';') + 1);
-	//printf("y %d x %d\n", *y, *x);
-	//printf("%s\n", ft_strchr(buf, '['));
+	write(1,"\x1b[s", 3);
+	write(1,"\x1b[999C\x1b[999B", 12);
+	getxy(&data->x, &data->y);
+	write(1,"\x1b[u", 3);
 }
 
 static int	read_line(t_string *line)
@@ -153,26 +162,28 @@ static int	read_line(t_string *line)
 	char	buf[11];
 	int		ret;
 	int		flag;
-	int		row;
 
-	row = get_data()->x;
 	flag = 0;
 	while (!flag)
 	{
+		getxy(&get_data()->x_curr, &get_data()->y_curr);
 		ret = read(0, buf, 10);
+		if (ret == -1)
+			panic(ERR_READ);
 		buf[ret] = '\0';
 		if ((*buf > 31 && *buf < 127) || *buf == '\n')
 		{
 			write(1,buf,1);
-			(get_data()->x_counter)++;
-			if ((get_data()->x_counter % row) == 0)
+			if ((get_data()->x_curr % get_data()->x) == 0)
 				write(1,"\n",1);
-			if (!(ft_string_push(line, buf)))
-				panic(ERR_MALLOC);
-			if (line->str[line->len - 1] == '\n')
+			if (*buf != '\n')
 			{
-				get_data()->x_counter = get_data()->x_current; // change this to
-				// get x ret val
+				if (!(ft_string_push(line, buf)))
+					panic(ERR_MALLOC);
+			}
+			else
+			{
+				ft_string_push_char(line, '\0');
 				flag = 1;
 			}
 		}
@@ -183,6 +194,7 @@ static int	read_line(t_string *line)
 		else if (*buf == 27)
 			is_arrow(buf);
 	}
+	//printf("line: %s - %ld\n", line->str, line->len);
 	return (ret);
 }
 
@@ -195,20 +207,25 @@ static void	wait_input(t_data *data)
 		panic(ERR_MALLOC);
 	ft_putstr_fd(MSG_PROMPT, 1);
 	*print_prompt() = 1;
-	ret = read_line(data->line);
+	ret = 1;
 	while (ret >= 0)
 	{
+		// fix spam enter shows cursor at end of term, use invisibility?
+		getxy(&data->x_prompt, &data->y_coun);
+		get_max_xy(data);
+		ret = read_line(data->line);
+		//printf("%d\n", ret);
 		if (ret == 0)
 			ctrl_d(data);
 		if (ret == -1)
 			panic(ERR_READ);
 		if (!line_empty(data->line))
 		{
+			//write(1,"yo\n",3);
 			*print_prompt() = 0;
 			return ;
 		}
 		ft_putstr_fd(MSG_PROMPT, 1);
-		ret = read_line(data->line);
 	}
 }
 
@@ -224,17 +241,9 @@ void		term_test()
 
 	struct termios s_termios;
 	tcgetattr(0, &s_termios);
-	s_termios.c_lflag &= ~(ICANON); /* Met le terminal en mode canonique. La fonction Read recevra les entrées clavier en direct sans attendre qu'on appuie sur Enter */
-	s_termios.c_lflag &= ~(ECHO); /* Les touches tapées au clavier ne s'affficheront plus dans le terminal */
+	s_termios.c_lflag &= ~(ICANON);
+	s_termios.c_lflag &= ~(ECHO);
 	tcsetattr(0, 0, &s_termios);
-}
-
-void		get_max_xy(t_data *data)
-{
-	write(1,"\x1b[s", 3);
-	write(1,"\x1b[999C\x1b[999B", 12);
-	getxy(&data->x, &data->y);
-	write(1,"\x1b[u", 3);
 }
 
 int			main(int argc, char **argv, char **env)
@@ -249,17 +258,9 @@ int			main(int argc, char **argv, char **env)
 	signal(SIGINT, &sig_int);
 	signal(SIGQUIT, &sig_quit);
 	term_test(argc, argv);
-	int o;
-
-	o = 0; //kill me plz
 	while (1)
 	{
 		// call func that populates data here and change this to term data?
-	ft_putstr_fd(MSG_PROMPT, 1);
-		get_max_xy(data); // update this and x_current at read_line func
-		getxy(&data->x_current, &o);
-		printf("%d\n", data->x_current);
-		data->x_counter = data->x_current; // change this to get x ret val
 		wait_input(data);
 		parse_line(data);
 		parse_cmds(data);
@@ -270,7 +271,7 @@ int			main(int argc, char **argv, char **env)
 		}
 		post_process(data);
 		exec_process(data);
-		printf("%s%s", MSG_PROMPT, data->line->str);
+		//printf("%s%s", MSG_PROMPT, data->line->str);
 		free_data(data);
 	}
 }

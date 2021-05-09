@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:57:52 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/09 02:10:09 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/09 14:45:10 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,12 @@ typedef struct		s_data
 	t_string		*line;
 	int				sigint_received;
 	int				sigquit_received;
-	int				x_counter; // does this goes here or create new data?
-	int				x_current;
-	int				x;
+	int				x_prompt; // does this goes here or create new data?
+	int				x_curr;
+	int				y_curr;
+	int				y_coun;
 	int				y;
+	int				x;
 	t_list			*cmds;
 }					t_data;
 
