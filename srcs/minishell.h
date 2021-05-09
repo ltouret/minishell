@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:57:52 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/09 14:45:10 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/09 23:28:51 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ typedef enum		e_error
 	ERR_OPEN,
 	ERR_UNKNOWN_CMD,
 	ERR_UNINIT_ENV_DICO,
-	ERR_DOUBLE_INIT_ENV_DICO
+	ERR_DOUBLE_INIT_ENV_DICO,
+	ERR_UNKNOWN_X,
+	ERR_UNKNOWN_TERM
 }					t_error;
 
 typedef struct		s_cd_opts
@@ -73,18 +75,26 @@ typedef enum		e_builtin
 	BUILTINS_COUNT
 }					t_builtin;
 
+typedef struct		s_history {
+	char			**file_history;
+	char			**my_history;
+	t_string		*path;
+	int				hist_fd;
+	int				file_size;
+	int				my_size;
+	int				curr_size;
+}					t_history;
+
 typedef struct		s_data
 {
 	char			**env;
 	t_string		*line;
 	int				sigint_received;
 	int				sigquit_received;
-	int				x_prompt; // does this goes here or create new data?
+	int				x_prompt;
 	int				x_curr;
-	int				y_curr;
-	int				y_coun;
-	int				y;
 	int				x;
+	t_history		history;
 	t_list			*cmds;
 }					t_data;
 
@@ -187,5 +197,9 @@ char				*path_join(const char *begin, const char *end);
 void				free_data(t_data *data);
 void				free_cmds(t_list *cmds);
 void				free_pipe_cmds(t_list *pipe_cmd_elem);
+void				add_history(t_data *data);
+void				print_hist(t_history *history, int my_history);
+int					init_history(t_history *history);
+void				show_up_hist(t_history *history);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:50:46 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/09 00:44:18 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/09 23:24:06 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,30 @@ void	free_cmds(t_list *cmds)
 
 void	free_data(t_data *data)
 {
+//get free of history outta here
+// dont free hisotry after each cmd
+	int i;
+
+	i = 0;
+	if (data->history.file_history)
+	{
+		while (data->history.file_history[i])
+		{
+			free(data->history.file_history[i]);
+			i++;
+		}
+		free(data->history.file_history);
+	}
+	i = 0;
+	if (data->history.my_history)
+	{
+		while (data->history.my_history[i])
+		{
+			free(data->history.my_history[i]);
+			i++;
+		}
+		free(data->history.my_history);
+	}
 	if (data->line)
 		ft_string_destroy(data->line);
 	if (data->cmds)

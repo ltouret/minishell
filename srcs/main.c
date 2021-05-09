@@ -6,11 +6,11 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/08 22:42:36 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/09 16:26:13 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/09 23:55:32 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//header
+//check includes!!!
 
 #include <unistd.h>
 #include <stdio.h>
@@ -28,7 +28,6 @@ static int	line_empty(t_string *line)
 	int		ret;
 
 	splitted = ft_split(line->str, "\f\t \n\r\v");
-	//write(1,"dis\n",4);
 	if (!splitted)
 		panic(ERR_MALLOC);
 	if (!*splitted)
@@ -39,51 +38,24 @@ static int	line_empty(t_string *line)
 	return (ret);
 }
 
-void		print_escape(char *buf)
+void		getx(int *x)
 {
-	int		i;
-	int		len;
-
-	len = ft_strlen(buf);
-	printf("\nlen:%d ", len);
-	i = -1;
-	while (++i < len)
-		printf("%d ", *(buf + i));
-	printf("\n");
-}
-
-void		getxy(int *x, int *y)
-{
-	//This func will get the current row & row (y, x)
-	/*
-	this func will bge called the first time the code is executed to regulate 
-	how the code erases char at the start of a line
-	it will be called and give x as starting char so that erase_char func doesnt 
-	erase the "start" of my prompt.
-	should call this func after each prompt to update starting x of prompt each 
-	time. 
-	*/
-	
 	char	buf[10];
-	int		i = 0;
-	int		ch = 0;
-	int		ret = 0;
+	int		i;
+	int		ch;
 
+	i = 0;
+	ch = 0;
 	write(1, "\x1b[6n", 4);
 	while (ch != 'R')
 	{
-		ret = read(0, &ch, 1);
-		if (!ret)
-			return ;
+		if (!read(0, &ch, 1))
+			panic(ERR_UNKNOWN_X);
 		buf[i] = ch;
 		i++;
 	}
-	if (y)
-		*y = ft_atoi(ft_strchr(buf, '[') + 1);
 	if (x)
 		*x = ft_atoi(ft_strchr(buf, ';') + 1);
-	//printf("y %d x %d\n", *y, *x);
-	//printf("%s\n", ft_strchr(buf, '['));
 }
 
 void		del_char(t_string *line)
@@ -97,10 +69,8 @@ void		del_char(t_string *line)
 	ft_string_push(buf, itoa);
 	free(itoa);
 	if (!(ft_string_push_char(buf, 'G')))
-		return ; // malloc error
-	//printf("coun %d curr %d\n", get_data()->y_coun, get_data()->y_curr);
-	if (line->len > 0) // && (get_data()->x_prompt - 1 < get_data()->x_curr
-		//|| get_data()->y_coun < get_data()->y_curr))
+		panic(ERR_MALLOC);
+	if (line->len > 0)
 	{
 		if (get_data()->x_curr == 1)
 		{
@@ -116,45 +86,27 @@ void		del_char(t_string *line)
 	ft_string_destroy(buf);
 }
 
-int			check_newline(t_string *line)
-{
-	size_t		i;
-	char		c;
-
-	i = 0;
-	while (i < line->len)
-	{
-		c = line->str[i];
-		if (c != '\n') //maybe check if there is a printable char
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 void		is_arrow(char *buf)
 {
-
-	//write(1,ku,3);
-	//write(1,buf,3);
 	if (strncmp(buf, "\x1b[A", 3) == 0)
 	{
-		//write(1,buf,3);
-		printf("up\n");
+		show_up_hist(&get_data()->history);
+		//printf("up\n");
 	}
 	if (strncmp(buf, "\x1b[B", 3) == 0)
 	{
-		//write(1,buf,3);
 		printf("down\n");
 	}
 }
 
-void		get_max_xy(t_data *data)
+void		get_max_x(t_data *data)
 {
-	write(1,"\x1b[s", 3);
-	write(1,"\x1b[999C\x1b[999B", 12);
-	getxy(&data->x, &data->y);
-	write(1,"\x1b[u", 3);
+	write(1, "\x1b[s", 3);
+	write(1, "\x1b[?25l", 6);
+	write(1, "\x1b[999C", 6);
+	getx(&data->x);
+	write(1, "\x1b[u", 3);
+	write(1, "\x1b[?25h", 6);
 }
 
 static int	read_line(t_string *line)
@@ -164,18 +116,19 @@ static int	read_line(t_string *line)
 	int		flag;
 
 	flag = 0;
+	//printf("line: %s - %ld\n", line->str, line->len);
 	while (!flag)
 	{
-		getxy(&get_data()->x_curr, &get_data()->y_curr);
+		getx(&get_data()->x_curr);
 		ret = read(0, buf, 10);
 		if (ret == -1)
 			panic(ERR_READ);
 		buf[ret] = '\0';
 		if ((*buf > 31 && *buf < 127) || *buf == '\n')
 		{
-			write(1,buf,1);
-			if ((get_data()->x_curr % get_data()->x) == 0)
-				write(1,"\n",1);
+			write(1, buf, 1);
+			if ((get_data()->x_curr % get_data()->x) == 0 && *buf != '\n')
+				write(1, "\n", 1);
 			if (*buf != '\n')
 			{
 				if (!(ft_string_push(line, buf)))
@@ -189,7 +142,7 @@ static int	read_line(t_string *line)
 		}
 		else if (*buf == 127)
 			del_char(line);
-		else if (*buf == 4 && check_newline(line) == 0)
+		else if (*buf == 4 && line->len == 0)
 			ctrl_d(get_data());
 		else if (*buf == 27)
 			is_arrow(buf);
@@ -210,18 +163,15 @@ static void	wait_input(t_data *data)
 	ret = 1;
 	while (ret >= 0)
 	{
-		// fix spam enter shows cursor at end of term, use invisibility?
-		getxy(&data->x_prompt, &data->y_coun);
-		get_max_xy(data);
+		get_max_x(data);
+		getx(&data->x_prompt);
 		ret = read_line(data->line);
-		//printf("%d\n", ret);
 		if (ret == 0)
 			ctrl_d(data);
 		if (ret == -1)
 			panic(ERR_READ);
 		if (!line_empty(data->line))
 		{
-			//write(1,"yo\n",3);
 			*print_prompt() = 0;
 			return ;
 		}
@@ -229,21 +179,24 @@ static void	wait_input(t_data *data)
 	}
 }
 
-void		term_test()
-// add protections for termios here
+void		init_termcap(void)
 {
-	char *term_type = getenv("TERM");
-	int ret;
+	char			*term_type;
+	struct termios	s_termios;
+	int				ret;
 
+	term_type = getenv("TERM");
+	if (!term_type)
+		panic(ERR_MALLOC);
 	ret = (tgetent(NULL, term_type));
 	if (ret == -1 || ret == 0)
-		printf("%d\n", ret); // termcap error here!
-
-	struct termios s_termios;
-	tcgetattr(0, &s_termios);
+		panic(ERR_UNKNOWN_TERM);
+	if (tcgetattr(0, &s_termios) == -1)
+		panic(ERR_UNKNOWN_TERM);
 	s_termios.c_lflag &= ~(ICANON);
 	s_termios.c_lflag &= ~(ECHO);
-	tcsetattr(0, 0, &s_termios);
+	if (tcsetattr(0, 0, &s_termios) == -1)
+		panic(ERR_UNKNOWN_TERM);
 }
 
 int			main(int argc, char **argv, char **env)
@@ -257,11 +210,14 @@ int			main(int argc, char **argv, char **env)
 	env_init(env);
 	signal(SIGINT, &sig_int);
 	signal(SIGQUIT, &sig_quit);
-	term_test(argc, argv);
+	init_termcap();
+	init_history(&data->history); // add error if cant find
 	while (1)
 	{
-		// call func that populates data here and change this to term data?
 		wait_input(data);
+		add_history(data);
+		//print_hist(&data->history, 0);
+		//show_up_hist(&data->history);
 		parse_line(data);
 		parse_cmds(data);
 		if (parse_redirs(data) == ERR)
@@ -272,6 +228,6 @@ int			main(int argc, char **argv, char **env)
 		post_process(data);
 		exec_process(data);
 		//printf("%s%s", MSG_PROMPT, data->line->str);
-		free_data(data);
+		//free_data(data); // deal with history being freed each fucking time
 	}
 }

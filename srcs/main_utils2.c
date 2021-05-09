@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:50:52 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/09 14:06:16 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/09 16:31:16 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,8 @@
 
 void	sig_int(int sig)
 {
-	//reset geet_counter
-	//cehck why someitmes does pritn ctrl c and sometimes not
 	if (sig == SIGINT)
 	{
-		//printf("\n");
 		if (*print_prompt())
 		{
 			printf("^C\n");

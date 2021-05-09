@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:49:36 by ltouret           #+#    #+#             */
-/*   Updated: 2021/04/28 21:28:51 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/09 22:06:48 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ void	panic(t_error err_code)
 		printf("Error : environ dico must be initialized ... exiting\n");
 	else if (err_code == ERR_DOUBLE_INIT_ENV_DICO)
 		printf("Error : environ dico is already initialized ... exiting\n");
+	else if (err_code == ERR_UNKNOWN_TERM)
+		printf("Error : Cannot access the termcap data base... exiting\n");
+	else if (err_code == ERR_UNKNOWN_X)
+		printf("Error : cannot get columns of terminal... exiting\n");
 	else
 		printf("Unknown Error ... exiting\n");
 	exit(ERR);
