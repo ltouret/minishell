@@ -6,7 +6,7 @@
 #    By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/20 13:00:20 by ltouret           #+#    #+#              #
-#    Updated: 2021/05/08 00:33:50 by ltouret          ###   ########.fr        #
+#    Updated: 2021/05/09 01:58:28 by ltouret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,4 +63,8 @@ test:	all
 		@./minishell
 		@reset
 
-.PHONY: all clean fclean re
+test2:	all
+		@echo -n heeeeeeeeeeeeeeeey ; ./minishell
+		@reset
+
+.PHONY: all clean fclean re test test2

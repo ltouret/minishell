@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/08 22:42:36 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/09 00:03:47 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/09 02:26:35 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,26 +38,6 @@ static int	line_empty(t_string *line)
 	return (ret);
 }
 
-struct termios	*get_termios()
-{
-	static struct termios s_termios;
-
-	return (&s_termios);
-}
-
-int			*get_counter()
-{
-	static int	i = 0;
-
-	return (&i);
-}
-
-int			mychar(int c)
-{
-	write(1,&c,1);
-	return 1;
-}
-
 void		print_escape(char *buf)
 {
 	int		i;
@@ -73,68 +53,33 @@ void		print_escape(char *buf)
 
 void		del_char(t_string *line)
 {
-	int		co;
-	char	*kr;
-
-	co = tgetnum("co");
-	if (line->len > 0 && *get_counter() > ft_strlen(MSG_PROMPT)) 
-	{
-		if ((*get_counter() % co) == 0)
-		{
-			kr = tgetstr("up", NULL);
-			tputs (kr, 1, mychar);
-			kr = tgetstr("ch", NULL);
-			tputs(tgoto(kr, 0, co), 1, mychar);
-			kr = tgetstr("ce", NULL);
-			tputs (kr, 1, mychar);
-			ft_string_pop(line);
-			(*get_counter())--;
-			return;
-		}
-		kr = tgetstr("le", NULL);
-		tputs (kr, 1, mychar);
-		kr = tgetstr("dc", NULL);
-		tputs (kr, 1, mychar);
-		ft_string_pop(line);
-		(*get_counter())--;
-		//printf("\n%d %d %d %d\n", *kr, *(kr + 1), *(kr + 2), ft_strlen(kr));
-		//write(1,kr,3);
-	}
-	//int li = tgetnum("li");
-	//printf("co %d li %d\n", kra, kre);
-	//printf("co %d\n", co);
-	//tputs(tgoto(kr, 0, 2), 1, mychar);
-}
-
-void		new_del_char(t_string *line)
-{
-	int			col;
+	int			row;
 	t_string	*buf;
 	char		*itoa;
 
-	col = tgetnum("co");
-	itoa = ft_itoa(col);
+	row = get_data()->x;
+	itoa = ft_itoa(row);
 	buf = ft_string_new();
 	ft_string_push(buf, "\x1b[");
 	ft_string_push(buf, itoa);
 	free(itoa);
 	if (!(ft_string_push_char(buf, 'G')))
 		return ; // malloc err
-	if (line->len > 0 && *get_counter() > ft_strlen(MSG_PROMPT)) 
+	if (line->len > 0 && get_data()->x_counter > get_data()->x_current) 
 	{
-		if ((*get_counter() % col) == 0)
+		if ((get_data()->x_counter % row) == 0)
 		{
 			write(1, "\x1b[F", 3);
 			write(1, buf->str, buf->len);
 			write(1, "\x1b[X", 3);
 			ft_string_pop(line);
-			(*get_counter())--;
+			(get_data()->x_counter)--;
 			return ;
 		}
 		write(1, "\b", 1);
 		write(1, "\x1b[X", 3);
 		ft_string_pop(line);
-		(*get_counter())--;
+		(get_data()->x_counter)--;
 	}
 }
 
@@ -156,8 +101,6 @@ int			check_newline(t_string *line)
 
 void		is_arrow(char *buf)
 {
-	//char *kl = tgetstr("kl", NULL);
-	//char *kr = tgetstr("kr", NULL);
 
 	//write(1,ku,3);
 	//write(1,buf,3);
@@ -173,9 +116,9 @@ void		is_arrow(char *buf)
 	}
 }
 
-void		getxy()
+void		getxy(int *x, int *y)
 {
-	//This func will get the current col & row (y, x)
+	//This func will get the current row & row (y, x)
 	/*
 	this func will bge called the first time the code is executed to regulate 
 	how the code erases char at the start of a line
@@ -191,16 +134,17 @@ void		getxy()
 	int		ret = 0;
 
 	write(1, "\x1b[6n", 4);
-	(void) buf;
 	while (ch != 'R')
 	{
 		ret = read(0, &ch, 1);
 		if (!ret)
 			return ;
 		buf[i] = ch;
-		//printf("buf[%d]: \t%c \t%d\n", i, buf[i], ch);
 		i++;
 	}
+	*y = ft_atoi(ft_strchr(buf, '[') + 1);
+	*x = ft_atoi(ft_strchr(buf, ';') + 1);
+	//printf("y %d x %d\n", *y, *x);
 	//printf("%s\n", ft_strchr(buf, '['));
 }
 
@@ -209,33 +153,34 @@ static int	read_line(t_string *line)
 	char	buf[11];
 	int		ret;
 	int		flag;
-	int		co;
+	int		row;
 
-	co = tgetnum("co");
+	row = get_data()->x;
 	flag = 0;
 	while (!flag)
 	{
 		ret = read(0, buf, 10);
+		buf[ret] = '\0';
 		if ((*buf > 31 && *buf < 127) || *buf == '\n')
 		{
-			(*get_counter())++;
 			write(1,buf,1);
-			if ((*get_counter() % co) == 0)
+			(get_data()->x_counter)++;
+			if ((get_data()->x_counter % row) == 0)
 				write(1,"\n",1);
-			buf[ret] = '\0';
 			if (!(ft_string_push(line, buf)))
 				panic(ERR_MALLOC);
 			if (line->str[line->len - 1] == '\n')
 			{
-				*get_counter() = ft_strlen(MSG_PROMPT);
+				get_data()->x_counter = get_data()->x_current; // change this to
+				// get x ret val
 				flag = 1;
 			}
 		}
-		if (*buf == 127)
-			new_del_char(line);
-		if (*buf == 4 && check_newline(line) == 0)
+		else if (*buf == 127)
+			del_char(line);
+		else if (*buf == 4 && check_newline(line) == 0)
 			ctrl_d(get_data());
-		if (*buf == 27)
+		else if (*buf == 27)
 			is_arrow(buf);
 	}
 	return (ret);
@@ -277,12 +222,19 @@ void		term_test()
 	if (ret == -1 || ret == 0)
 		printf("%d\n", ret); // termcap error here!
 
-	struct termios *s_termios;
-	s_termios = get_termios();
-	tcgetattr(0, s_termios);
-	s_termios->c_lflag &= ~(ICANON); /* Met le terminal en mode canonique. La fonction Read recevra les entrées clavier en direct sans attendre qu'on appuie sur Enter */
-	s_termios->c_lflag &= ~(ECHO); /* Les touches tapées au clavier ne s'affficheront plus dans le terminal */
-	tcsetattr(0, 0, s_termios);
+	struct termios s_termios;
+	tcgetattr(0, &s_termios);
+	s_termios.c_lflag &= ~(ICANON); /* Met le terminal en mode canonique. La fonction Read recevra les entrées clavier en direct sans attendre qu'on appuie sur Enter */
+	s_termios.c_lflag &= ~(ECHO); /* Les touches tapées au clavier ne s'affficheront plus dans le terminal */
+	tcsetattr(0, 0, &s_termios);
+}
+
+void		get_max_xy(t_data *data)
+{
+	write(1,"\x1b[s", 3);
+	write(1,"\x1b[999C\x1b[999B", 12);
+	getxy(&data->x, &data->y);
+	write(1,"\x1b[u", 3);
 }
 
 int			main(int argc, char **argv, char **env)
@@ -296,10 +248,18 @@ int			main(int argc, char **argv, char **env)
 	env_init(env);
 	signal(SIGINT, &sig_int);
 	signal(SIGQUIT, &sig_quit);
-	term_test(argc, argv); //merege this shit
-	*get_counter() = ft_strlen(MSG_PROMPT);
+	term_test(argc, argv);
+	int o;
+
+	o = 0; //kill me plz
 	while (1)
 	{
+		// call func that populates data here and change this to term data?
+	ft_putstr_fd(MSG_PROMPT, 1);
+		get_max_xy(data); // update this and x_current at read_line func
+		getxy(&data->x_current, &o);
+		printf("%d\n", data->x_current);
+		data->x_counter = data->x_current; // change this to get x ret val
 		wait_input(data);
 		parse_line(data);
 		parse_cmds(data);

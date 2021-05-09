@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:50:52 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/08 23:03:47 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/09 00:26:18 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void	sig_int(int sig)
 		//printf("\n");
 		if (*print_prompt())
 		{
-			//*get_counter() = 0;
 			printf("^C\n");
+			get_data()->x_counter = ft_strlen(MSG_PROMPT); //change to get x ret val
 			ft_bzero(get_data()->line->str, get_data()->line->capacity);
 			get_data()->line->len = 0;
 			ft_putstr_fd(MSG_PROMPT, 1);
