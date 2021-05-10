@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/08 22:42:36 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/09 23:55:32 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/10 20:52:13 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,8 @@ void		is_arrow(char *buf)
 	}
 	if (strncmp(buf, "\x1b[B", 3) == 0)
 	{
-		printf("down\n");
+		//printf("down\n");
+		show_do_hist(&get_data()->history);
 	}
 }
 
@@ -165,6 +166,8 @@ static void	wait_input(t_data *data)
 	{
 		get_max_x(data);
 		getx(&data->x_prompt);
+		data->history.mcurr_size = 0;
+		data->history.fcurr_size = 0;
 		ret = read_line(data->line);
 		if (ret == 0)
 			ctrl_d(data);
@@ -216,8 +219,7 @@ int			main(int argc, char **argv, char **env)
 	{
 		wait_input(data);
 		add_history(data);
-		//print_hist(&data->history, 0);
-		//show_up_hist(&data->history);
+		print_hist(&data->history, 0);
 		parse_line(data);
 		parse_cmds(data);
 		if (parse_redirs(data) == ERR)

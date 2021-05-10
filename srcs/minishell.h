@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:57:52 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/09 23:28:51 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/10 20:52:46 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ typedef struct		s_history {
 	int				hist_fd;
 	int				file_size;
 	int				my_size;
-	int				curr_size;
+	int				fcurr_size;
+	int				mcurr_size;
 }					t_history;
 
 typedef struct		s_data
@@ -201,5 +202,6 @@ void				add_history(t_data *data);
 void				print_hist(t_history *history, int my_history);
 int					init_history(t_history *history);
 void				show_up_hist(t_history *history);
+void				show_do_hist(t_history *history);
 
 #endif

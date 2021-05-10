@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/09 22:35:47 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/10 00:07:39 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/10 21:33:09 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,24 +102,39 @@ static int		open_hist(t_history *history)
 
 void			show_up_hist(t_history *history)
 {
-	//printf("curr %d\n", history->curr_size);
-		if (history->my_size > 0 &&
-			history->my_size > history->curr_size - 1)
-		{
-			history->curr_size = history->my_size - 1;
-			printf("%s\n", history->my_history[history->curr_size]);
-			return ;
-		}
-		else if (history->file_size > 0 &&
-			history->file_size > history->curr_size - 1)
-		{
-			history->curr_size = history->file_size - 1;
-			printf("%s\n", history->file_history[history->curr_size]);
-			return ;
-		}
-		//else //no file?
-	history->curr_size--;
-	printf("curr %d\n", history->curr_size);
+	int index;
+
+	printf("up ");
+	if (history->my_size > 0 &&
+		history->my_size - history->mcurr_size - 1 >= 0)
+	{
+		history->mcurr_size++;
+		index = history->my_size - history->mcurr_size;
+		printf("%s\n", history->my_history[index]);
+	}
+	else if (history->file_size > 0 &&
+		history->file_size - history->fcurr_size - 1 >= 0)
+	{
+		history->fcurr_size++;
+		index = history->file_size - history->fcurr_size;
+		printf("%s\n", history->file_history[index]);
+	}
+}
+
+void			show_do_hist(t_history *history)
+{
+	printf("down ");
+	if (history->mcurr_size >= 1)
+	{
+		history->mcurr_size--;
+		printf("%d %s\n", history->mcurr_size, history->my_history[history->my_size - history->mcurr_size]);
+	}
+	else if (history->fcurr_size >= 1)
+	{
+		history->fcurr_size--;
+		printf("%d %s\n", history->fcurr_size, history->file_history[history->file_size - history->fcurr_size]);
+	}
+	//else //no file?
 }
 
 int				init_history(t_history *history)

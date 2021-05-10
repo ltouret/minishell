@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:50:52 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/09 16:31:16 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/10 20:38:42 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	sig_int(int sig)
 		if (*print_prompt())
 		{
 			printf("^C\n");
+			get_data()->history.mcurr_size = 0;
+			get_data()->history.fcurr_size = 0;
 			ft_bzero(get_data()->line->str, get_data()->line->capacity);
 			get_data()->line->len = 0;
 			ft_putstr_fd(MSG_PROMPT, 1);
