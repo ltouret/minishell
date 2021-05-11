@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:50:46 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/09 23:24:06 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/10 21:55:19 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,16 +82,6 @@ void	free_data(t_data *data)
 			i++;
 		}
 		free(data->history.file_history);
-	}
-	i = 0;
-	if (data->history.my_history)
-	{
-		while (data->history.my_history[i])
-		{
-			free(data->history.my_history[i]);
-			i++;
-		}
-		free(data->history.my_history);
 	}
 	if (data->line)
 		ft_string_destroy(data->line);

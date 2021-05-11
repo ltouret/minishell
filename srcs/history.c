@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/09 22:35:47 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/10 21:33:09 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/11 02:11:30 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void	add_history(t_data *data)
 {
 	if (!data->line->str)
 		return ;
-	add_line(&data->history.my_history, data->line->str);
-	data->history.my_size++;
+	add_line(&data->history.file_history, data->line->str);
+	data->history.file_size++;
 }
 
 static void	read_hist(t_history *history)
@@ -65,22 +65,17 @@ static void	read_hist(t_history *history)
 			history->file_size++;
 		}
 	}
+	history->write_flag = history->file_size;
 }
 
-void		print_hist(t_history *history, int my_history)
+void		print_hist(t_history *history)
 //erase dis, not really needed
 {
 	int		i;
 
-	if (!my_history)
-	{
-		i = -1;
-		while (history->file_size > ++i)
-			printf("%d %s\n", i + 1, history->file_history[i]);
-	}
 	i = -1;
-	while (history->my_size > ++i)
-		printf("%d %s\n", history->file_size + i + 1, history->my_history[i]);
+	while (history->file_size > ++i)
+		printf("%d %s\n", i + 1, history->file_history[i]);
 }
 
 static int		open_hist(t_history *history)
@@ -93,7 +88,7 @@ static int		open_hist(t_history *history)
 	if (!(ft_string_push(history->path,  "/.bash_history")))
 		return (0); // err malloc
 	history->hist_fd = open(history->path->str, O_RDONLY);
-	if (history->hist_fd == -1)
+	if (history->hist_fd == -1) //if deosnt exist works anyway? why
 		return (1); // err no file found - set errno!!
 	read_hist(history);
 	close(history->hist_fd);
@@ -102,39 +97,59 @@ static int		open_hist(t_history *history)
 
 void			show_up_hist(t_history *history)
 {
-	int index;
+	int	index;
+	int	y;
 
-	printf("up ");
-	if (history->my_size > 0 &&
-		history->my_size - history->mcurr_size - 1 >= 0)
+	//TODO create old_line, the first time we get into this func 
+	// do old_line = line, line = strdup history[i]
+	// if pressed again (up/do) free(history[i]) and history[i] = line
+	// then do this each time, free(line) & line = strdup of history[i]
+	// when down called until curr_size == 0
+	// do free(line), line = old_line
+	// code ft_string_dup.c
+	// ctrl c will need to free(old_line)
+	// code ft_string_clear 
+	// example line 26, 27 of ctrl c
+
+	if (history->file_size > 0 &&
+		history->file_size - history->curr_size - 1 >= 0)
 	{
-		history->mcurr_size++;
-		index = history->my_size - history->mcurr_size;
-		printf("%s\n", history->my_history[index]);
+		history->curr_size++;
+		index = history->file_size - history->curr_size;
+		//printf("%s\n", history->file_history[index]);
 	}
-	else if (history->file_size > 0 &&
-		history->file_size - history->fcurr_size - 1 >= 0)
+	//ESC[{line};{column}H
+	//ESC[#F
+	index = get_data()->line->len;
+	get_max_x(get_data());
+	y = index / get_data()->x;
+	if (y == 0)
 	{
-		history->fcurr_size++;
-		index = history->file_size - history->fcurr_size;
-		printf("%s\n", history->file_history[index]);
+		write(1, "\x1b[3G", 4); // jump to prompt use with prompt
+		write(1, "\x1b[0J", 4); //clean rest of term
 	}
+	else //check the case that x or y are negative!!!
+	{
+		write(1, "\x1b[2F", 4); //go up 2 lines use with y
+		write(1, "\x1b[3G", 4); // jump to prompt use with prompt
+		write(1, "\x1b[0J", 4); //clean rest of term
+	}
+	//printf("%d %d %d\n", index, y, x);
 }
 
 void			show_do_hist(t_history *history)
 {
-	printf("down ");
-	if (history->mcurr_size >= 1)
+	int index;
+
+	if (history->curr_size > 0)
 	{
-		history->mcurr_size--;
-		printf("%d %s\n", history->mcurr_size, history->my_history[history->my_size - history->mcurr_size]);
+		history->curr_size--;
+		index = history->file_size - history->curr_size;
+		if (history->file_history[index]) 
+			printf("%s\n", history->file_history[index]);
+		else
+			printf("here i erase u bish\n"); //this will jus re print line
 	}
-	else if (history->fcurr_size >= 1)
-	{
-		history->fcurr_size--;
-		printf("%d %s\n", history->fcurr_size, history->file_history[history->file_size - history->fcurr_size]);
-	}
-	//else //no file?
 }
 
 int				init_history(t_history *history)

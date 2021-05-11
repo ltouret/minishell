@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:57:52 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/10 20:52:46 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/10 23:01:20 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,11 @@ typedef enum		e_builtin
 
 typedef struct		s_history {
 	char			**file_history;
-	char			**my_history;
 	t_string		*path;
 	int				hist_fd;
+	int				write_flag;
 	int				file_size;
-	int				my_size;
-	int				fcurr_size;
-	int				mcurr_size;
+	int				curr_size;
 }					t_history;
 
 typedef struct		s_data
@@ -95,6 +93,7 @@ typedef struct		s_data
 	int				x_prompt;
 	int				x_curr;
 	int				x;
+	int				y;
 	t_history		history;
 	t_list			*cmds;
 }					t_data;
@@ -199,9 +198,12 @@ void				free_data(t_data *data);
 void				free_cmds(t_list *cmds);
 void				free_pipe_cmds(t_list *pipe_cmd_elem);
 void				add_history(t_data *data);
-void				print_hist(t_history *history, int my_history);
+void				print_hist(t_history *history);
 int					init_history(t_history *history);
 void				show_up_hist(t_history *history);
 void				show_do_hist(t_history *history);
+void				del_char(t_string *line);
+void				getx(int *x, int *y);
+void				get_max_x(t_data *data);
 
 #endif
