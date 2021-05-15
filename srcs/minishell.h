@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:57:52 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/13 20:08:43 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/15 20:40:26 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ void				free_cmds(t_list *cmds);
 void				free_pipe_cmds(t_list *pipe_cmd_elem);
 void				add_history(t_data *data);
 void				print_hist(t_history *history);
-int					init_history(t_history *history);
+void				init_history(void);
 void				show_up_hist(t_history *history);
 void				show_do_hist(t_history *history);
 void				del_char(t_string *line);

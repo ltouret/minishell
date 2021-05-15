@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/08 22:42:36 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/13 20:41:04 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/15 20:39:42 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,12 +219,11 @@ int			main(int argc, char **argv, char **env)
 	signal(SIGINT, &sig_int);
 	signal(SIGQUIT, &sig_quit);
 	init_termcap();
-	init_history(&data->history);
+	init_history();
 	while (1)
 	{
 		wait_input(data);
 		add_history(data);
-		//print_hist(&data->history);
 		parse_line(data);
 		parse_cmds(data);
 		if (parse_redirs(data) == ERR)
