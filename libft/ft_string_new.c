@@ -6,11 +6,10 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 17:36:58 by ltouret           #+#    #+#             */
-/*   Updated: 2021/03/29 17:37:10 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/13 19:43:18 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "libft.h"
 
 t_string	*ft_string_new(void)

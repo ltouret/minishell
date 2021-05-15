@@ -6,11 +6,10 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 17:39:13 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/09 16:25:18 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/13 19:45:42 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "libft.h"
 
 t_string	*ft_string_push(t_string *string, char *to_append)
