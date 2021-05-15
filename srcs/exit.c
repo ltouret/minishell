@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:50:16 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/03 00:14:42 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/16 01:01:58 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ t_error	builtin_exit(size_t argc, char **argv)
 		status = ft_atoi(*argv);
 	free_data(get_data());
 	env_shutdown();
+	termcap_exit();
+	free_history(get_history());
 	if (argc == 1)
 		exit((unsigned char)status);
 	else

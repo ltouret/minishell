@@ -6,13 +6,11 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:50:46 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/10 21:55:19 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/16 01:00:31 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "libft.h"
-#include <stdlib.h>
 
 t_data	*get_data(void)
 {
@@ -69,20 +67,6 @@ void	free_cmds(t_list *cmds)
 
 void	free_data(t_data *data)
 {
-//get free of history outta here
-// dont free hisotry after each cmd
-	int i;
-
-	i = 0;
-	if (data->history.file_history)
-	{
-		while (data->history.file_history[i])
-		{
-			free(data->history.file_history[i]);
-			i++;
-		}
-		free(data->history.file_history);
-	}
 	if (data->line)
 		ft_string_destroy(data->line);
 	if (data->cmds)
