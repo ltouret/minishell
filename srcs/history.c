@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/09 22:35:47 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/11 02:11:30 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/15 02:27:11 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@ void	add_history(t_data *data)
 {
 	if (!data->line->str)
 		return ;
+	//printf("cmp %d\n", ft_strcmp(data->line->str, data->history.file_history[data->history.file_size - 1]));
+	if (data->history.file_size != 0 && ft_strcmp(data->line->str, data->history.file_history[data->history.file_size - 1]) == 0)
+		return ;
 	add_line(&data->history.file_history, data->line->str);
 	data->history.file_size++;
 }
@@ -80,6 +83,7 @@ void		print_hist(t_history *history)
 
 static int		open_hist(t_history *history)
 {
+	//TODO add malloc prot / panic
 	//TODO add protection if file doesnt exist!!
 	// by creating teh damn file
 	history->path = ft_string_new();
@@ -95,60 +99,138 @@ static int		open_hist(t_history *history)
 	return (1); //check this and return type
 }
 
-void			show_up_hist(t_history *history)
+void			jump_to_prompt()
 {
-	int	index;
-	int	y;
-
+	//TODO add malloc prot / panic
 	//TODO create old_line, the first time we get into this func 
 	// do old_line = line, line = strdup history[i]
-	// if pressed again (up/do) free(history[i]) and history[i] = line
+	// if pressed again up/down & line modified free(history[i]) and history[i] = line
 	// then do this each time, free(line) & line = strdup of history[i]
 	// when down called until curr_size == 0
 	// do free(line), line = old_line
-	// code ft_string_dup.c
 	// ctrl c will need to free(old_line)
-	// code ft_string_clear 
 	// example line 26, 27 of ctrl c
+
+	char		*itoa;
+	t_string	*escape;
+	int			index;
+	int			y;
+
+	index = get_data()->line->len;
+	get_max_x(get_data());
+	y = index / get_data()->x;
+	escape = ft_string_new();
+	//TODO add panic for malloc
+	// && FREE!
+	if (y == 0)
+	{
+		itoa = ft_itoa(get_data()->x_prompt);
+		ft_string_push(escape, "\x1b[");
+		ft_string_push(escape, itoa);
+		if (!ft_string_push_char(escape, 'G')) // panic malloc
+			panic(ERR_MALLOC);// panic malloc
+		write(1, escape->str, escape->len); // jump to prompt use with prompt
+		write(1, "\x1b[0J", 4); //clean rest of term
+		free(itoa);
+	}
+	else //check the case that x or y are negative!!!
+	{
+		itoa = ft_itoa(y);
+		ft_string_push(escape, "\x1b[");
+		ft_string_push(escape, itoa);
+		if (!ft_string_push_char(escape, 'F'))
+			panic(ERR_MALLOC);// panic malloc
+		free(itoa);
+		write(1, escape->str, escape->len); // jump to prompt use with prompt
+		ft_string_clear(escape);
+		itoa = ft_itoa(get_data()->x_prompt);
+		ft_string_push(escape, "\x1b[");
+		ft_string_push(escape, itoa);
+		if (!ft_string_push_char(escape, 'G')) // panic malloc
+			panic(ERR_MALLOC);// panic malloc
+		free(itoa);
+		write(1, escape->str, escape->len); // jump to prompt use with prompt
+		write(1, "\x1b[0J", 4); //clean rest of term
+	}
+	ft_string_destroy(escape);
+}
+
+void			show_up_hist(t_history *history)
+{
+	//TODO add malloc prot / panic
+	int		index;
+	char	**tmp;
 
 	if (history->file_size > 0 &&
 		history->file_size - history->curr_size - 1 >= 0)
 	{
+		jump_to_prompt();
 		history->curr_size++;
 		index = history->file_size - history->curr_size;
-		//printf("%s\n", history->file_history[index]);
-	}
-	//ESC[{line};{column}H
-	//ESC[#F
-	index = get_data()->line->len;
-	get_max_x(get_data());
-	y = index / get_data()->x;
-	if (y == 0)
-	{
-		write(1, "\x1b[3G", 4); // jump to prompt use with prompt
-		write(1, "\x1b[0J", 4); //clean rest of term
-	}
-	else //check the case that x or y are negative!!!
-	{
-		write(1, "\x1b[2F", 4); //go up 2 lines use with y
-		write(1, "\x1b[3G", 4); // jump to prompt use with prompt
-		write(1, "\x1b[0J", 4); //clean rest of term
+		tmp = &history->file_history[index + 1];
+		if (history->curr_size == 1)
+		{
+			get_data()->old_line = ft_string_new();
+			ft_string_push(get_data()->old_line, get_data()->line->str);
+			ft_string_clear(get_data()->line);
+			ft_string_push(get_data()->line, history->file_history[index]);
+			//printf("in %d %s %s\n", history->curr_size, get_data()->old_line->str, get_data()->line->str); 
+			write(1, get_data()->line->str, get_data()->line->len); 
+		}
+		else
+		{
+			//TODO each time you go up/do free(history[i]) and replace it for line, so if line is modified the history will be modified too
+			// maybe add an array with the modified history (i mean the * after the number
+			if (ft_strcmp(get_data()->line->str, *tmp) 
+				!= 0)
+			{
+				//printf("tmp %s\n", history->file_history[index]);
+				free(*tmp);
+				*tmp = ft_strdup(get_data()->line->str);
+				//printf("tmp %s\n", *tmp);
+			}
+			ft_string_clear(get_data()->line);
+			ft_string_push(get_data()->line, history->file_history[index]);
+			write(1, get_data()->line->str, get_data()->line->len); 
+		}
 	}
 	//printf("%d %d %d\n", index, y, x);
 }
 
 void			show_do_hist(t_history *history)
 {
-	int index;
+	//TODO add malloc prot / panic
+	int		index;
+	char	**tmp;
 
 	if (history->curr_size > 0)
 	{
+		jump_to_prompt();
 		history->curr_size--;
 		index = history->file_size - history->curr_size;
+		tmp = &history->file_history[index - 1];
+		if (ft_strcmp(get_data()->line->str, *tmp) 
+			!= 0)
+		{
+			//printf("tmp %s\n", history->file_history[index]);
+			free(*tmp);
+			*tmp = ft_strdup(get_data()->line->str);
+			//printf("tmp %s\n", *tmp);
+		}
 		if (history->file_history[index]) 
-			printf("%s\n", history->file_history[index]);
+		{
+			ft_string_clear(get_data()->line);
+			ft_string_push(get_data()->line, history->file_history[index]);
+			write(1, get_data()->line->str, get_data()->line->len); 
+			//printf("%s\n", history->file_history[index]);
+		}
 		else
-			printf("here i erase u bish\n"); //this will jus re print line
+		{
+			ft_string_clear(get_data()->line);
+			ft_string_push(get_data()->line, get_data()->old_line->str); 
+			write(1, get_data()->line->str, get_data()->line->len); 
+			//printf("here i erase u bish\n"); //this will jus re print line
+		}
 	}
 }
 

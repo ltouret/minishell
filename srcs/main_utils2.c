@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:50:52 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/10 21:55:46 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/13 21:21:08 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ void	sig_int(int sig)
 		if (*print_prompt())
 		{
 			printf("^C\n");
+			//printf("^C %s %ld\n", get_data()->line->str, get_data()->line->len);
 			get_data()->history.curr_size = 0;
-			ft_bzero(get_data()->line->str, get_data()->line->capacity);
-			get_data()->line->len = 0;
+			ft_string_clear(get_data()->line);
 			ft_putstr_fd(MSG_PROMPT, 1);
 		}
 		get_data()->sigint_received = 1;
@@ -40,8 +40,8 @@ void	sig_quit(int sig)
 		{
 			//printf("\n");
 			//ft_putstr_fd(MSG_PROMPT, 1);
-			ft_bzero(get_data()->line->str, get_data()->line->capacity);
-			get_data()->line->len = 0;
+			get_data()->history.curr_size = 0;
+			ft_string_clear(get_data()->line);
 		}
 		else
 		{

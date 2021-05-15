@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:57:52 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/10 23:01:20 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/13 20:08:43 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ typedef struct		s_data
 {
 	char			**env;
 	t_string		*line;
+	t_string		*old_line;
 	int				sigint_received;
 	int				sigquit_received;
 	int				x_prompt;
