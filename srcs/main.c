@@ -6,17 +6,12 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/08 22:42:36 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/16 00:53:41 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/17 22:11:53 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//check includes!!!
-
 #include <signal.h>
 #include "minishell.h"
-#include <term.h>
-#include <curses.h>
-#include <sys/types.h>
 
 static int	line_empty(t_string *line)
 {
@@ -34,72 +29,21 @@ static int	line_empty(t_string *line)
 	return (ret);
 }
 
-void		getx(int *x, int *y)
+static void	write_char(t_string *line, char *buf, int *flag)
 {
-	char	buf[1000];
-	int		i;
-	int		ch;
-
-	i = 0;
-	ch = 0;
-	write(1, "\x1b[6n", 4);
-	while (ch != 'R')
+	write(1, buf, 1);
+	if ((get_data()->x_curr % get_data()->x) == 0 && *buf != '\n')
+		write(1, "\n", 1);
+	if (*buf != '\n')
 	{
-		if (!read(0, &ch, 1))
-			panic(ERR_UNKNOWN_X);
-		buf[i] = ch;
-		i++;
+		if (!(ft_string_push(line, buf)))
+			panic(ERR_MALLOC);
 	}
-	if (x)
-		*x = ft_atoi(ft_strchr(buf, ';') + 1);
-	if (y)
-		*y = ft_atoi(ft_strchr(buf, '[') + 1);
-}
-
-void		del_char(t_string *line)
-{
-	t_string	*buf;
-	char		*itoa;
-
-	itoa = ft_itoa(get_data()->x);
-	buf = ft_string_new();
-	ft_string_push(buf, "\x1b[");
-	ft_string_push(buf, itoa);
-	free(itoa);
-	if (!(ft_string_push_char(buf, 'G')))
-		panic(ERR_MALLOC);
-	if (line->len > 0)
+	else
 	{
-		if (get_data()->x_curr == 1)
-		{
-			write(1, "\x1b[F", 3);
-			write(1, buf->str, buf->len);
-			write(1, "\x1b[X", 3);
-			ft_string_pop(line);
-			return ;
-		}
-		write(1, "\b\x1b[X", 4);
-		ft_string_pop(line);
+		ft_string_push_char(line, '\0');
+		*flag = 1;
 	}
-	ft_string_destroy(buf);
-}
-
-void		is_arrow(char *buf)
-{
-	if (strncmp(buf, "\x1b[A", 3) == 0)
-		show_up_hist(get_history());
-	if (strncmp(buf, "\x1b[B", 3) == 0)
-		show_do_hist(get_history());
-}
-
-void		get_max_x(t_data *data)
-{
-	write(1, "\x1b[s", 3);
-	write(1, "\x1b[?25l", 6);
-	write(1, "\x1b[999C\x1b[999B", 12);
-	getx(&data->x, &data->y);
-	write(1, "\x1b[u", 3);
-	write(1, "\x1b[?25h", 6);
 }
 
 static int	read_line(t_string *line)
@@ -109,7 +53,6 @@ static int	read_line(t_string *line)
 	int		flag;
 
 	flag = 0;
-	//printf("line: %s - %ld\n", line->str, line->len);
 	while (!flag)
 	{
 		getx(&get_data()->x_curr, &get_data()->y);
@@ -118,21 +61,7 @@ static int	read_line(t_string *line)
 			panic(ERR_READ);
 		buf[ret] = '\0';
 		if ((*buf > 31 && *buf < 127) || *buf == '\n')
-		{
-			write(1, buf, 1);
-			if ((get_data()->x_curr % get_data()->x) == 0 && *buf != '\n')
-				write(1, "\n", 1);
-			if (*buf != '\n')
-			{
-				if (!(ft_string_push(line, buf)))
-					panic(ERR_MALLOC);
-			}
-			else
-			{
-				ft_string_push_char(line, '\0');
-				flag = 1;
-			}
-		}
+			write_char(line, buf, &flag);
 		else if (*buf == 127)
 			del_char(line);
 		else if (*buf == 4 && line->len == 0)
@@ -140,7 +69,6 @@ static int	read_line(t_string *line)
 		else if (*buf == 27)
 			is_arrow(buf);
 	}
-	//printf("line: %s - %ld\n", line->str, line->len);
 	return (ret);
 }
 
@@ -173,38 +101,6 @@ static void	wait_input(t_data *data)
 	}
 }
 
-void		termcap_init(void)
-{
-	char			*term_type;
-	struct termios	s_termios;
-	int				ret;
-
-	term_type = getenv("TERM");
-	if (!term_type)
-		panic(ERR_MALLOC);
-	ret = (tgetent(NULL, term_type));
-	if (ret == -1 || ret == 0)
-		panic(ERR_UNKNOWN_TERM);
-	if (tcgetattr(0, &s_termios) == -1)
-		panic(ERR_UNKNOWN_TERM);
-	s_termios.c_lflag &= ~(ICANON);
-	s_termios.c_lflag &= ~(ECHO);
-	if (tcsetattr(0, 0, &s_termios) == -1)
-		panic(ERR_UNKNOWN_TERM);
-}
-
-void		termcap_exit(void)
-{
-	struct termios	s_termios;
-
-	if (tcgetattr(0, &s_termios) == -1)
-		panic(ERR_UNKNOWN_TERM);
-	s_termios.c_lflag |= (ICANON);
-	s_termios.c_lflag |= (ECHO);
-	if (tcsetattr(0, 0, &s_termios) == -1)
-		panic(ERR_UNKNOWN_TERM);
-}
-
 int			main(int argc, char **argv, char **env)
 {
 	t_data	*data;
@@ -230,7 +126,6 @@ int			main(int argc, char **argv, char **env)
 		}
 		post_process(data);
 		exec_process(data);
-		printf("%s%s %ld %ld\n", MSG_PROMPT, data->line->str, data->line->len, data->line->capacity);
 		free_data(data);
 	}
 }

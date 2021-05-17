@@ -6,13 +6,13 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/16 00:24:42 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/16 01:00:13 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/17 21:54:24 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_history(t_history *history)
+void			free_history(t_history *history)
 {
 	int i;
 

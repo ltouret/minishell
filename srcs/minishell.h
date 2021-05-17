@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/28 19:57:52 by ltouret           #+#    #+#             */
-/*   Updated: 2021/05/16 00:58:01 by ltouret          ###   ########.fr       */
+/*   Updated: 2021/05/16 21:42:09 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,10 @@ void				free_cmds(t_list *cmds);
 void				free_pipe_cmds(t_list *pipe_cmd_elem);
 void				termcap_init(void);
 void				termcap_exit(void);
+void				get_max_x(t_data *data);
+void				get_x(int *x, int *y);
+void				del_char(t_string *line);
+void				is_arrow(char *buf);
 void				history_init(void);
 t_history			*get_history(void);
 void				add_history(t_data *data);

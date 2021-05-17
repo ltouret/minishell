@@ -6,7 +6,7 @@
 #    By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/20 13:00:20 by ltouret           #+#    #+#              #
-#    Updated: 2021/05/16 00:24:26 by ltouret          ###   ########.fr        #
+#    Updated: 2021/05/16 21:42:51 by ltouret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ SRCS = srcs/main.c srcs/main_utils1.c srcs/main_utils2.c srcs/errors.c\
 		srcs/builtins.c srcs/cd.c srcs/echo.c srcs/env.c srcs/exit.c\
 		srcs/export.c srcs/pwd.c srcs/unset.c srcs/whereis.c\
 		srcs/path_utils.c srcs/exists.c srcs/join.c srcs/history.c\
-		srcs/history2.c srcs/history3.c
+		srcs/history2.c srcs/history3.c srcs/history4.c srcs/termcap.c
 
 OBJS = ${SRCS:.c=.o}
 
